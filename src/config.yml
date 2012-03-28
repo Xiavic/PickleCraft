@@ -1,0 +1,63 @@
+modules: 
+- ignore
+- teleport
+- counter
+common:
+  messages:
+    errors:
+      tomanyplayers: '&4To many possible matches for &e%s&4, be more specific.'
+      sameplayer: '&e%s &4and &e%s&4 is the same person.'
+      playerdontexist: '&e%s&4 does not exist.'
+      donthaveperm: '&4You do not have permission for that.'
+      parsefail: '&4Can not parse &e%s.'
+    info:
+      accept: '&2Accepted.'
+teleportask:
+  denyTimer: 30
+  returnTimer: 30
+  messages:
+    commandhelplist:
+      header: '&2----Teleport commands----'
+    errors:
+      requestpending: '&4Sorry, but &e%s&4 already has a request pending.'
+      havenorequests: '&4You have no requests.'
+      cantreturn: '&4Sorry but you can not return.'
+      alreadyaccepted: '&4You already accepted!'
+      failteleport: '&4Teleport has failed.'
+    info:
+      requestsent: '&2Request Sent.'
+      tphererequest: '&e%s&2 has sent a request to teleport to him.'
+      tprequest: '&e%s&2 has sent a request to teleport to you.'
+      tpdualaccept: '&e%s&2 has accepted.'
+      tpheredualrequest: '&e%s&2 has sent a  request for you to teleport to &e%.'
+      tpdualrequest: '&e%s&2 has sent a request for &e%s&2 to teleport to you.'
+      showcommands: '&6/tpaccept&2 to accept | &6/tpdeny&2 to deny.'
+      showreturncommand: '&6/tpareturn&2 to return to your last location.'
+      deniedrequest: '&e%s&2 Denied your request.'
+      autodeniedrequest: '&2%s Auto Denied your request.'
+      autodeny: '&2Auto Denied request.'
+      deny: '&2Denied request.'
+      teleporting: '&2Teleporting......'
+      incomingplayer: '&2Here Comes &e%s!'
+      canreturn: '&2Returning you to your location before teleport.'
+ignorecraft:
+    messages:
+        commandhelplist:
+            header: '&2----Ignore commands----'
+        errors:
+            isnotignored: '&e%s&4 is not ignored.'
+            alreadyignored: '&4You are already ignoring &e%s.'
+            noignores: '&4You have not ignored anyone.'
+        info:
+            ignorelist: '&2Ignoring: &e%s'
+            removed: '&2Removed &e%s&2 from ignore list.'
+            added: '&2Now ignoring &e%s.'
+            ignored: '&e%s&2 is now ignoring you.'
+            allignore_on: '&2Now ignoring everyone..'
+            allignore_off: '&2No longer ignoring everyone.'
+counter:
+    counterline: '~counter~'
+    messages:
+        commandhelplist:
+            header: '&2----SignCounter----'
+            msg: '&2Place a sign with %s and power with redstone!'
