@@ -1,0 +1,18 @@
+PickleCraft is my personal bitch plugin.
+Orginally created for Orcworm.co.uk, but has been slightly modified to be able to add "components"
+these components are generally single classes and are loadable from the config.
+
+As of right now it is dependent on bukkit which is to soon to be phased out with spout and mcAPI.
+
+Goal for now is begin writing an simple but easy to use api so porting shall be easy.
+
+ChangeLog
+
+0.5 - Original Ignore commands.
+1.0 - add teleport ask.
+1.1 - various bug fixes?
+1.2 = rewrote it and add the component idea....
+1.3 - update for 1.1 R5 breaking event api....
+1.5 - signrank component.
+1.6 - redstone sign counter component.
+1.7 - ?
