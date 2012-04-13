@@ -93,7 +93,7 @@ permissions:
  PickleCraft.counter.build:
    description: Allows use of Counter Sign Placement
    default: true
- PickleCraft.reload
+ PickleCraft.reload:
    description: 
    default: op
  PickleCraft.timber.cut:

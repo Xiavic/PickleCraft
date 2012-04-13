@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import net.picklecodes.Modules.IModule;
-import net.picklecodes.Modules.BitchinReload.BitchinReloadModule;
 import net.picklecodes.Modules.Counter.CounterModule;
 import net.picklecodes.Modules.IgnoreCraft.IgnoreModule;
 import net.picklecodes.Modules.SignRank.SignRankModule;
@@ -156,10 +155,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		List<?> mods = getConfig().getList("modules");
 		for (int i=0; i < mods.size(); i++) {
 			String m = String.valueOf(mods.get(i));
-			if (m.equalsIgnoreCase("reload")) {
-				this.loadModule("reload", new BitchinReloadModule(this));
-			}
-			else if (m.equalsIgnoreCase("ignore")) {
+			if (m.equalsIgnoreCase("ignore")) {
 				this.loadModule("ignore", new IgnoreModule(this));
 			}
 			else if (m.equalsIgnoreCase("teleport")) {
