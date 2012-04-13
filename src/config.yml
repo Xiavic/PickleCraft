@@ -61,3 +61,4 @@ counter:
         commandhelplist:
             header: '&2----SignCounter----'
             msg: '&2Place a sign with %s and power with redstone!'
+    

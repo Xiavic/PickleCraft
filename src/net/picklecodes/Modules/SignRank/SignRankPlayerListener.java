@@ -37,7 +37,7 @@ public class SignRankPlayerListener implements Listener  {
 	}
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			BlockState blockstate = event.getClickedBlock().getState();
 			if (blockstate instanceof Sign) {
 				Sign sign = (Sign)blockstate;

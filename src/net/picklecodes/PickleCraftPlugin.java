@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import net.picklecodes.Modules.IModule;
+import net.picklecodes.Modules.BitchinReload.BitchinReloadModule;
 import net.picklecodes.Modules.Counter.CounterModule;
 import net.picklecodes.Modules.IgnoreCraft.IgnoreModule;
 import net.picklecodes.Modules.SignRank.SignRankModule;
 import net.picklecodes.Modules.TeleportAsk.TeleportAskModule;
+import net.picklecodes.Modules.Timber.TimberModule;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -154,7 +156,10 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		List<?> mods = getConfig().getList("modules");
 		for (int i=0; i < mods.size(); i++) {
 			String m = String.valueOf(mods.get(i));
-			if (m.equalsIgnoreCase("ignore")) {
+			if (m.equalsIgnoreCase("reload")) {
+				this.loadModule("reload", new BitchinReloadModule(this));
+			}
+			else if (m.equalsIgnoreCase("ignore")) {
 				this.loadModule("ignore", new IgnoreModule(this));
 			}
 			else if (m.equalsIgnoreCase("teleport")) {
@@ -165,6 +170,9 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 			}
 			else if (m.equalsIgnoreCase("counter")) {
 				this.loadModule("counter",new CounterModule(this));
+			}
+			else if (m.equalsIgnoreCase("timber")) {
+				this.loadModule("timber",new TimberModule(this));
 			}
 		}
 		Bukkit.getPluginManager().registerEvents(this, this);
