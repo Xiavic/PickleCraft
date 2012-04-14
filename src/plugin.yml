@@ -1,9 +1,9 @@
 name: PickleCraft
 main: net.picklecodes.PickleCraftPlugin
 author: Pickle
-version: 1.6.5
+version: 1.6.6
 description: This plugin simply adds a command to ignore annoying users, now with teleport commands.
-softdepend: [WorldEdit, PermissionsEx]
+softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:
     ignore:
         permission: IgnoreCraft.ignore
@@ -42,18 +42,6 @@ commands:
         usage: /tpareturn
     picklecraft:
         description: Help command
-        usage:
-    pcreload:
-        permission: PickleCraft.pcreload
-        description: 
-        usage: 
-    pcload:
-        permission: PickleCraft.pcreload
-        description: 
-        usage: 
-    pcunload:
-        permission: PickleCraft.pcreload
-        description: 
         usage: 
 permissions:
  IgnoreCraft.*:
@@ -87,16 +75,19 @@ permissions:
  IgnoreCraft.teleport.return:
    description: Allows use of /tpareturn
    default: true
+ PickleCraft.reload:
+   description:
+   default: op
  PickleCraft.signrank.build:
    description: Allows use of SignRank Sign Placement
    default: op
  PickleCraft.counter.build:
    description: Allows use of Counter Sign Placement
    default: true
- PickleCraft.reload:
-   description: 
-   default: op
  PickleCraft.timber.cut:
+   description: Allows mass log cutting.
+   default: true
+ PickleCraft.timber.cut.jungle:
    description: Allows mass log cutting.
    default: true
      

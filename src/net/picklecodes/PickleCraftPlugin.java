@@ -182,10 +182,21 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 			player = (Player) sender;
 		}
 		if (command.getName().equalsIgnoreCase("picklecraft")){ 
-			PluginDescriptionFile pdfFile = this.getDescription();
-			sender.sendMessage(ChatColor.DARK_GREEN+pdfFile.getName() +" Version "+ pdfFile.getVersion());
-			for (IModule module : modules.values()) {
-				module.sendCommandList(sender);
+			if (args.length > 0) {
+				if (player !=null) {
+					if (hasPerm(player,"PickleCraft.reload")) {
+						player.sendMessage("Derp! reloading the plugin :o");
+						Bukkit.getPluginManager().disablePlugin(this);
+						Bukkit.getPluginManager().enablePlugin(this);
+					}
+				}
+			}
+			else {
+				PluginDescriptionFile pdfFile = this.getDescription();
+				sender.sendMessage(ChatColor.DARK_GREEN+pdfFile.getName() +" Version "+ pdfFile.getVersion());
+				for (IModule module : modules.values()) {
+					module.sendCommandList(sender);
+				}
 			}
 			return true;
 		}	
