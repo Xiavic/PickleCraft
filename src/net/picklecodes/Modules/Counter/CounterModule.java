@@ -43,6 +43,10 @@ public class CounterModule implements IModule, Runnable {
 	}
 	
 	@Override
+	public String getName() {
+		return "Counter";
+	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		return false;
 	}
@@ -56,10 +60,10 @@ public class CounterModule implements IModule, Runnable {
 		if (player != null) {
 		     if (PickleCraftPlugin.hasPerm(player, "IgnoreCraft.ignore")) {
 		    	 player.sendMessage(
-		    			 plugin.getStringFromConfig("counter.messages.cammandhelplist.header","")
+		    			 plugin.getStringFromConfig("counter.messages.commandhelplist.header","")
 		    			 );
 		    	 player.sendMessage(
-		    			 plugin.getStringFromConfig("counter.messages.cammandhelplist.msg",
+		    			 plugin.getStringFromConfig("counter.messages.commandhelplist.msg",
 		    					 plugin.getStringFromConfig("counter.counterline",""))
 		    					 );
 		     }
@@ -94,4 +98,5 @@ public class CounterModule implements IModule, Runnable {
 			}
 		}
 	}
+
 }

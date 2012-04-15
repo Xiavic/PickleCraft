@@ -1,8 +1,8 @@
 name: PickleCraft
 main: net.picklecodes.PickleCraftPlugin
 author: Pickle
-version: 1.6.6
-description: This plugin simply adds a command to ignore annoying users, now with teleport commands.
+version: 1.7
+description: Adds various usefull things.
 softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:
     ignore:

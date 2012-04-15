@@ -51,7 +51,7 @@ public class SignRankModule implements IModule {
 			plugin.getServer().getPluginManager().registerEvents(srPlayerListener, plugin);
 		}
 		else {
-			plugin.unloadModule(this);
+			PickleCraftPlugin.moduleManger.unloadModule(this);
 			PickleCraftPlugin.log.info("Could not find pex!");
 		}
 	}
@@ -60,7 +60,10 @@ public class SignRankModule implements IModule {
 	public PickleCraftPlugin getPlugin() {
 		return plugin;
 	}
-
+	@Override
+	public String getName() {
+		return "SignRank";
+	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {

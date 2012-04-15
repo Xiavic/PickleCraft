@@ -58,6 +58,10 @@ public class TeleportAskModule implements IModule {
 		return plugin;
 	}
 	@Override
+	public String getName() {
+		return "TeleportAgree";
+	}
+	@Override
 	public void onDisable() {
 
 	}

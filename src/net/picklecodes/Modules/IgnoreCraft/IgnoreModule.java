@@ -47,6 +47,10 @@ public class IgnoreModule implements IModule {
 		return plugin;
 	}
 	@Override
+	public String getName() {
+		return "Ignore";
+	}
+	@Override
 	public void onDisable() {
 		Save();
 	}

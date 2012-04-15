@@ -1,11 +1,11 @@
 package net.picklecodes;
 
-import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.logging.Logger;
 
 import net.picklecodes.Modules.IModule;
+import net.picklecodes.Modules.ModuleManager;
 import net.picklecodes.Modules.Counter.CounterModule;
 import net.picklecodes.Modules.IgnoreCraft.IgnoreModule;
 import net.picklecodes.Modules.SignRank.SignRankModule;
@@ -48,9 +48,9 @@ import com.sk89q.wepif.PermissionsResolverManager;
  */
 public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static Logger log = Bukkit.getLogger();
-	private static boolean worldedit;
+	public static final ModuleManager moduleManger = new ModuleManager(); 
 	
-	public HashMap<String,IModule> modules = new HashMap<String,IModule>();
+	private static boolean worldedit;
 	
 	
 	/*
@@ -112,35 +112,19 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	
 	public static boolean hasWorldEdit() { return worldedit; }
 	
-	public void unloadModule(String module) {
-		IModule mod = modules.get(module);
-		if (mod != null) {
-			mod.onDisable();
-		}
-		modules.remove(module);
+	public void reload() {
+		Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin :o"));
+		Bukkit.getPluginManager().disablePlugin(this);
+		Bukkit.getPluginManager().enablePlugin(this);
+		//moduleManger.reloadModules();
 	}
-	public void unloadModule(IModule module) {
-		if (module != null) {
-			module.onDisable();
-			modules.remove(module);
-			
-		}
-	}
-	public void loadModule(String key,IModule module) {
-		if (module != null) {
-			if (!modules.containsKey(key)) {
-				module.onEnable();
-			 	modules.put(key, module);
-			}
-		}
-	}
+
 	@Override
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
-		for (IModule module : modules.values()) {
-			module.onDisable();
-		}
-		modules.clear();
+		moduleManger.unloadModules();
+		saveConfig();
+		
 	}
 
 	@Override
@@ -151,24 +135,25 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		}
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+		reloadConfig();
 		/* set up new modules */
 		List<?> mods = getConfig().getList("modules");
 		for (int i=0; i < mods.size(); i++) {
 			String m = String.valueOf(mods.get(i));
 			if (m.equalsIgnoreCase("ignore")) {
-				this.loadModule("ignore", new IgnoreModule(this));
+				moduleManger.loadModule(new IgnoreModule(this));
 			}
 			else if (m.equalsIgnoreCase("teleport")) {
-				this.loadModule("teleport",new TeleportAskModule(this));
+				moduleManger.loadModule(new TeleportAskModule(this));
 			}
 			else if (m.equalsIgnoreCase("signrank")) {
-				this.loadModule("signrank",new SignRankModule(this));
+				moduleManger.loadModule(new SignRankModule(this));
 			}
 			else if (m.equalsIgnoreCase("counter")) {
-				this.loadModule("counter",new CounterModule(this));
+				moduleManger.loadModule(new CounterModule(this));
 			}
 			else if (m.equalsIgnoreCase("timber")) {
-				this.loadModule("timber",new TimberModule(this));
+				moduleManger.loadModule(new TimberModule(this));
 			}
 		}
 		Bukkit.getPluginManager().registerEvents(this, this);
@@ -185,16 +170,16 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 			if (args.length > 0) {
 				if (player !=null) {
 					if (hasPerm(player,"PickleCraft.reload")) {
-						player.sendMessage("Derp! reloading the plugin :o");
-						Bukkit.getPluginManager().disablePlugin(this);
-						Bukkit.getPluginManager().enablePlugin(this);
+						if (args[1].equalsIgnoreCase("reload")) {
+							reload();
+						}
 					}
 				}
 			}
 			else {
 				PluginDescriptionFile pdfFile = this.getDescription();
 				sender.sendMessage(ChatColor.DARK_GREEN+pdfFile.getName() +" Version "+ pdfFile.getVersion());
-				for (IModule module : modules.values()) {
+				for (IModule module : moduleManger.modules) {
 					module.sendCommandList(sender);
 				}
 			}
@@ -216,13 +201,17 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		}
 		else {
 			boolean success = false;
-			for (IModule module : modules.values()) {
+			for (IModule module : moduleManger.modules) {
 				if (module.onCommand(sender, command, label, args) == true) { 
 					success = true; 
 				}
 			}
 			return success;
 		}
+	}
+	
+	public void Damage(Player player,int amount) {
+		player.getItemInHand().setDurability((short) (player.getItemInHand().getDurability() + amount));
 	}
 	
 	@EventHandler(priority = EventPriority.LOW)

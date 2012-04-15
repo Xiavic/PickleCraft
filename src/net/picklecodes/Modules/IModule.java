@@ -14,6 +14,7 @@ public interface IModule {
 	public void onDisable();
 	public void onEnable();
 	public PickleCraftPlugin getPlugin();
+	public String getName();
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args);
 	public void sendCommandList(CommandSender sender);
 }
