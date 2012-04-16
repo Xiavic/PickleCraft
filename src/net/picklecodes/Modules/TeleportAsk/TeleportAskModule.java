@@ -73,7 +73,7 @@ public class TeleportAskModule implements IModule {
 			teleportPlayerList.add(new TeleportPlayer(this, player));
 		}
 		/* run update on teleport players..
-		 * 1200L = 1 second worth of ticks.
+		 * 20L = 1 second worth of ticks.
 		 */
 		plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
 			@Override
@@ -82,7 +82,7 @@ public class TeleportAskModule implements IModule {
 					player.Update();
 				}
 			}
-		}, 10L, 1200L);
+		}, 0L, 20L);
 	}
 	@Override
 	public void sendCommandList(CommandSender sender) {

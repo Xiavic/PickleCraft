@@ -355,6 +355,7 @@ public class TeleportPlayer {
 	}
 	
 	public void Update() {
+		//do only thread safe stuff here....
 		if (HasRequest()) {
 			if (MaxDenyTimer != 0) {
 				if (denyTimer > 0) { 
