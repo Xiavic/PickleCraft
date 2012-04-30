@@ -1,4 +1,4 @@
-PickleCraft is my personal bitch plugin.
+PickleCraft is my personal plugin.
 Orginally created for Orcworm.co.uk, but has been slightly modified to be able to add "components"
 these components are generally single classes and are loadable from the config.
 
@@ -7,6 +7,7 @@ As of right now it is dependent on bukkit which is to soon to be phased out with
 Goal for now is begin writing an simple but easy to use api so porting shall be easy.
 
 ChangeLog
+1.8.2 Added automatic loadable internal components. 
 1.8 Added PickleCraft IRC bot! refactored package name to reflect new domain :P
 1.7 Redone the module system.
 1.6.6 Logblock logs timber... add reload command.

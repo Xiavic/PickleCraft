@@ -2,10 +2,8 @@ package net.picklecraft.Modules.TeleportAsk;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.picklecraft.PickleCraftPlugin;
 import net.picklecraft.Modules.IModule;
-
+import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,7 +29,8 @@ import org.bukkit.entity.Player;
  */
 
 public class TeleportAskModule implements IModule {
-	public List<TeleportPlayer> teleportPlayerList = new ArrayList<TeleportPlayer>();
+ 
+    public List<TeleportPlayer> teleportPlayerList = new ArrayList<TeleportPlayer>();
 	
 	private PickleCraftPlugin plugin;
 	
@@ -233,17 +232,14 @@ public class TeleportAskModule implements IModule {
 						if (coord.length >= 2) {
 							try {
 								int x = Integer.parseInt(coord[0]);
-								int y = 1;
-								int z = 0;
+								int y = 0;
+								int z;
 								if (coord.length >= 3) {
-									y = Integer.parseInt(coord[1]);
+                                                                    y = Integer.parseInt(coord[1]);
 								    z = Integer.parseInt(coord[2]);
 								}
 								else {
 								    z = Integer.parseInt(coord[1]);
-								}
-								if (y < 0 && y > 128) {
-									y=1;
 								}
 								if (!getTeleportPlayer(player).TeleportToCoord(x, y, z)) {
 									player.sendMessage(

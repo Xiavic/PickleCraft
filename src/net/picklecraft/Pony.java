@@ -33,8 +33,8 @@ public class Pony {
 		ChatColor.GREEN,
 		ChatColor.BLUE,
 		ChatColor.DARK_BLUE,
-		ChatColor.DARK_PURPLE
-	};
+		ChatColor.DARK_PURPLE,
+              	};
 	private static String[] ponies = { 
 			ChatColor.WHITE+"Rarity is best pony!", 
 			ChatColor.GOLD+"AppleJack is best pony!",

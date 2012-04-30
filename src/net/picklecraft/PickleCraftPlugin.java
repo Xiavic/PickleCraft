@@ -1,6 +1,5 @@
 package net.picklecraft;
 
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,7 +47,7 @@ import com.sk89q.wepif.PermissionsResolverManager;
  * 
  */
 public class PickleCraftPlugin extends JavaPlugin implements Listener {
-	public static Logger log = Bukkit.getLogger();
+	public static final Logger log = Bukkit.getLogger();
 	public static final ModuleManager moduleManger = new ModuleManager(); 
 	
 	private static boolean worldedit;
@@ -219,13 +218,13 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPluginDisabled(PluginDisableEvent event) {
-		if (event.getPlugin().getName() == "WorldEdit") {
+		if ("WorldEdit".equals(event.getPlugin().getName())) {
 			PickleCraftPlugin.worldedit = false;
 		}
 	}
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPluginEnabled(PluginEnableEvent event) {
-		if (event.getPlugin().getName() == "WorldEdit") {
+		if ("WorldEdit".equals(event.getPlugin().getName())) {
 			PickleCraftPlugin.worldedit = true;
 			PermissionsResolverManager.initialize(this);
 		}

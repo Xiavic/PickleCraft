@@ -1,7 +1,6 @@
 package net.picklecraft.Modules;
 
 import net.picklecraft.PickleCraftPlugin;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 /**
