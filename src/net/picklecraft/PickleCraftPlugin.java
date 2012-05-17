@@ -1,17 +1,17 @@
 package net.picklecraft;
 
+import com.sk89q.wepif.PermissionsResolverManager;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.logging.Logger;
-
-import net.picklecraft.Modules.IModule;
-import net.picklecraft.Modules.ModuleManager;
 import net.picklecraft.Modules.Counter.CounterModule;
-import net.picklecraft.Modules.IRC.IRCbotModule;
+import net.picklecraft.Modules.IModule;
 import net.picklecraft.Modules.Ignore.IgnoreModule;
+import net.picklecraft.Modules.ModuleLoader;
+import net.picklecraft.Modules.ModuleManager;
 import net.picklecraft.Modules.SignRank.SignRankModule;
 import net.picklecraft.Modules.TeleportAsk.TeleportAskModule;
 import net.picklecraft.Modules.Timber.TimberModule;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,8 +24,6 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
  * Copyright (c) 2011-2012
@@ -136,28 +134,12 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		saveConfig();
 		reloadConfig();
 		/* set up new modules */
-		List<?> mods = getConfig().getList("modules");
-		for (int i=0; i < mods.size(); i++) {
-			String m = String.valueOf(mods.get(i));
-			if (m.equalsIgnoreCase("ignore")) {
-				moduleManger.loadModule(new IgnoreModule(this));
-			}
-			else if (m.equalsIgnoreCase("teleport")) {
-				moduleManger.loadModule(new TeleportAskModule(this));
-			}
-			else if (m.equalsIgnoreCase("signrank")) {
-				moduleManger.loadModule(new SignRankModule(this));
-			}
-			else if (m.equalsIgnoreCase("counter")) {
-				moduleManger.loadModule(new CounterModule(this));
-			}
-			else if (m.equalsIgnoreCase("timber")) {
-				moduleManger.loadModule(new TimberModule(this));
-			}
-			else if (m.equalsIgnoreCase("IRCbot")) {
-				moduleManger.loadModule(new IRCbotModule(this));
-			}
-		}
+		List<String> mods = getConfig().getStringList("modules");
+                String[] ms = new String[mods.size()];
+                List<IModule> imods = ModuleLoader.getModules(this,mods.toArray(ms));
+                for (int i=0; i < imods.size(); i++) {
+                    moduleManger.loadModule(imods.get(i));
+                }
 		Bukkit.getPluginManager().registerEvents(this, this);
 
 	}

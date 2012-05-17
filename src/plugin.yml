@@ -1,5 +1,5 @@
 name: PickleCraft
-main: net.picklecodes.PickleCraftPlugin
+main: net.picklecraft.PickleCraftPlugin
 author: Pickle
 version: 1.8.2
 description: Adds various usefull things.

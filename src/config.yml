@@ -1,7 +1,7 @@
 modules: 
-- ignore
-- teleport
-- counter
+- net.picklecraft.Modules.Ignore.IgnoreModule
+- net.picklecraft.Modules.TeleportAsk.TeleportAskModule
+- net.picklecraft.Modules.Counter.CounterModule
 common:
   messages:
     errors:
