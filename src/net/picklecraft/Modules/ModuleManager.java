@@ -30,16 +30,16 @@ public class ModuleManager {
 		}
 	}
 	public void reloadModules() {
-		for (IModule module : modules) {
-			reloadModule(module);
-		}
+            for (IModule module : modules) {
+                    reloadModule(module);
+            }
 	}
 	
 	public void loadModule(IModule module) {
-		if (module != null) {
-			module.onEnable();
-			modules.add(module);
-		}
+            if (module != null) {
+                    module.onEnable();
+                    modules.add(module);
+            }
 	}
 
 	public void unloadModule(IModule module) {
@@ -78,7 +78,7 @@ public class ModuleManager {
 				return module;
 			}
 		}
-		return null;
+		return null;    
 	}
 
 }

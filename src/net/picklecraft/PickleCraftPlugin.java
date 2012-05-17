@@ -50,7 +50,6 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	
 	private static boolean worldedit;
 	
-	
 	/*
 	 * returns Player and a Boolean (that defines if multiple players was found).
 	 * first value will be Player
