@@ -14,7 +14,7 @@ common:
       accept: '&2Accepted.'
 teleportask:
   denyTimer: 30
-  returnTimer: 30
+  returnTimer: 120
   messages:
     commandhelplist:
       header: '&2----Teleport commands----'
@@ -24,6 +24,7 @@ teleportask:
       cantreturn: '&4Sorry but you can not return.'
       alreadyaccepted: '&4You already accepted!'
       failteleport: '&4Teleport has failed.'
+      cannotaccept: '&e%s&4 cannot accept.'
     info:
       requestsent: '&2Request Sent.'
       tphererequest: '&e%s&2 has sent a request to teleport to him.'

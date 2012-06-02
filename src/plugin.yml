@@ -1,16 +1,16 @@
 name: PickleCraft
 main: net.picklecraft.PickleCraftPlugin
 author: Pickle
-version: 1.8.3
+version: 1.8.5
 description: Adds various usefull things.
 softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:
     ignore:
-        permission: IgnoreCraft.ignore
+        permission: PickleCraft.ignore
         description: Ignores the player, "-r" is an optional flag to remove player from ignoreList.
         usage: /ignore <-r> [player]
     ignoreall:
-        permission: IgnoreCraft.ignore
+        permission: PickleCraft.ignore
         description: Blocks all chat except a select few.
         usage: /ignoreall
     ignoreList:
@@ -20,15 +20,15 @@ commands:
         description: Fluttershy told me to do it!
         usage:
     tpac:
-        permission: IgnoreCraft.teleport.coord
+        permission: PickleCraft.teleport.coord
         description: Teleport to specfic coordinate, do be careful.
         usage: /tpac [x,y,z] ; y is optional.
     tpa:
-        permission: IgnoreCraft.teleport
+        permission: PickleCraft.teleport
         description: Sends a player a request to teleport you, <unless you spefic a second player.>
         usage: /tpa [player] <target>
     tpahere:
-        permission: IgnoreCraft.teleport.here
+        permission: PickleCraft.teleport.here
         description: Request a player to teleport to you.
         usage: /tpahere [player]
     tpdeny:
@@ -37,42 +37,45 @@ commands:
     tpaccept:
         usage:
     tpareturn:
-        permission: IgnoreCraft.teleport.return
+        permission: PickleCraft.teleport.return
         description: Returns to last location before a teleport.
         usage: /tpareturn
     picklecraft:
         description: Help command
         usage: 
 permissions:
- IgnoreCraft.*:
+ PickleCraft.*:
    description: Full access.
    children:
-     IgnoreCraft.ignore: true
-     IgnoreCraft.teleport: true
-     IgnoreCraft.teleport.here: true
-     IgnoreCraft.teleport.coord: true
-     IgnoreCraft.teleport.dualplayers: true
-     IgnoreCraft.teleport.return: true
+     PickleCraft.ignore: true
+     PickleCraft.teleport: true
+     PickleCraft.teleport.here: true
+     PickleCraft.teleport.coord: true
+     PickleCraft.teleport.dualplayers: true
+     PickleCraft.teleport.return: true
     
- IgnoreCraft.ignore:
+ PickleCraft.ignore:
    description: Allows use of ignore commands.
    default: true
- IgnoreCraft.ignore.cantbeignored:
+ PickleCraft.ignore.cantbeignored:
    description: can't be ignored.
    default: op
- IgnoreCraft.teleport:
+ PickleCraft.teleport.accept:
+   description: Allows use of /tpaccept
+   default: true
+ PickleCraft.teleport:
    description: Allows use of /tpa [player]
    default: true
- IgnoreCraft.teleport.dualplayers:
+ PickleCraft.teleport.dualplayers:
    description: Allows use of /tpa [player] [player]
    default: op
- IgnoreCraft.teleport.coord:
+ PickleCraft.teleport.coord:
    description: Allows use of /tpac
    default: true
- IgnoreCraft.teleport.here:
+ PickleCraft.teleport.here:
    description: Allows use of /tpahere
    default: true
- IgnoreCraft.teleport.return:
+ PickleCraft.teleport.return:
    description: Allows use of /tpareturn
    default: true
  PickleCraft.reload:
@@ -89,5 +92,4 @@ permissions:
    default: true
  PickleCraft.timber.cut.jungle:
    description: Allows mass log cutting.
-   default: true
-     
+   default: true 

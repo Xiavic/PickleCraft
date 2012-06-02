@@ -135,10 +135,27 @@ public class TeleportAskModule implements IModule {
 									if ((Boolean)player_C_Andbool[1] == false) {
 										if ((Boolean)player_B_Andbool[1] == false) {
 											if (pB != pC) {
-												getTeleportPlayer(player).DualRequest(
-														getTeleportPlayer(pB),
-														getTeleportPlayer(pC)
-														);
+                                                                                            Command c = plugin.getCommand("tpaccept");
+                                                                                            if (PickleCraftPlugin.hasPerm(pB, c.getPermission())) {
+                                                                                                if (PickleCraftPlugin.hasPerm(pC, c.getPermission())) {
+                                                                                                    getTeleportPlayer(player).DualRequest(
+                                                                                                        getTeleportPlayer(pB),
+                                                                                                        getTeleportPlayer(pC)
+                                                                                                        );
+                                                                                                }
+                                                                                                else {
+                                                                                                    player.sendMessage(
+                                                                                                        plugin.getStringFromConfig("teleportask.messages.errors.cannotaccept"
+                                                                                                        , pC.getName())
+                                                                                                        );
+                                                                                                }
+                                                                                            }
+                                                                                            else {
+                                                                                                player.sendMessage(
+                                                                                                    plugin.getStringFromConfig("teleportask.messages.errors.cannotaccept"
+                                                                                                    , pB.getName())
+                                                                                                    );
+                                                                                            }
 											}
 											else {
 												player.sendMessage(
@@ -191,7 +208,17 @@ public class TeleportAskModule implements IModule {
 						Player p = (Player) playerAndbool[0]; 
 						if (p != null) {
 							if ((Boolean)playerAndbool[1] == false) {
-								getTeleportPlayer(p).Request(getTeleportPlayer(player),false);
+                                                            Command c = plugin.getCommand("tpaccept");
+                                                            if (PickleCraftPlugin.hasPerm(p, c.getPermission())) {
+                                                                getTeleportPlayer(p).Request(getTeleportPlayer(player),false);
+                                                            }
+                                                            else {
+                                                                player.sendMessage(
+                                                                    plugin.getStringFromConfig("teleportask.messages.errors.cannotaccept"
+                                                                    , p.getName())
+                                                                    );
+                                                            }
+								
 							}
 							else {
 								player.sendMessage(
@@ -280,7 +307,16 @@ public class TeleportAskModule implements IModule {
 						Player p = (Player) playerAndbool[0]; 
 						if (p != null) {
 							if ((Boolean)playerAndbool[1] == false) {
+                                                            Command c = plugin.getCommand("tpaccept");
+                                                            if (PickleCraftPlugin.hasPerm(p, c.getPermission())) {
 								getTeleportPlayer(p).Request(getTeleportPlayer(player),true);
+                                                            }
+                                                            else {
+                                                                player.sendMessage(
+                                                                    plugin.getStringFromConfig("teleportask.messages.errors.cannotaccept"
+                                                                    , p.getName())
+                                                                    );
+                                                            }
 							}
 							else {
 								player.sendMessage(
@@ -315,7 +351,15 @@ public class TeleportAskModule implements IModule {
 		 */
 		else if (command.getName().equalsIgnoreCase("tpaccept")){ 
 			if (player != null) {
+                            if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
 				getTeleportPlayer(player).Accept();
+                            }
+                            else {
+                                player.sendMessage(
+                                                plugin.getStringFromConfig("common.messages.errors.donthaveperm")
+                                                );	
+                                return true;
+                            }
 			}
 			else {
 				sender.sendMessage("This is a player only command.");

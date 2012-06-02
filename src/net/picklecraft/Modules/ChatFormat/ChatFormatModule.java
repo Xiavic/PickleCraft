@@ -90,21 +90,11 @@ public class ChatFormatModule implements IModule, Listener {
         @EventHandler(priority = EventPriority.LOWEST)
         public void onChat(PlayerChatEvent event) {
             StringBuilder sb = new StringBuilder();
-            StringBuilder name = new StringBuilder();
             PermissionUser user = permEx.getUser(event.getPlayer());
-            name.append(user.getPrefix());
-            name.append(event.getPlayer().getDisplayName());
-            sb.append(name);
+            sb.append(user.getPrefix());
+            sb.append(event.getPlayer().getDisplayName());
             sb.append(user.getSuffix());
             sb.append(event.getMessage());
-            String n = name.toString();
-            n = n.substring(n.lastIndexOf('&'),n.length());
-            if (n.length() > 15) {
-                //TODO make more effeienct.
-                n = n.substring(0,16);
-            }
-            
-            event.getPlayer().setPlayerListName(PickleCraftPlugin.Colorize(n));
             event.setFormat(PickleCraftPlugin.Colorize(sb.toString()));
         }
 }
