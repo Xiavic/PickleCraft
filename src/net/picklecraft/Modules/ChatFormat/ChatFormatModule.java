@@ -1,6 +1,8 @@
 package net.picklecraft.Modules.ChatFormat;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.picklecraft.Modules.Counter.CounterSign;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.PickleCraftPlugin;
@@ -41,6 +43,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
  * (as it's becoming annoying, adding random non useful functions) for my use.
  */
 public class ChatFormatModule implements IModule, Listener {
+    private Pattern pattern = Pattern.compile("%");
 	private PickleCraftPlugin plugin;
 	private PermissionManager permEx;
 	
@@ -94,7 +97,17 @@ public class ChatFormatModule implements IModule, Listener {
             sb.append(user.getPrefix());
             sb.append(event.getPlayer().getDisplayName());
             sb.append(user.getSuffix());
-            sb.append(event.getMessage());
+            /* exscape "%" in the message */
+            Matcher m = pattern.matcher(event.getMessage());
+            StringBuffer sb2 = new StringBuffer();
+            boolean result = m.find();
+            while(result) {
+                m.appendReplacement(sb2, "%%");
+                result = m.find();
+            }
+            m.appendTail(sb2);
+            
+            sb.append(sb2.toString());
             event.setFormat(PickleCraftPlugin.Colorize(sb.toString()));
         }
 }

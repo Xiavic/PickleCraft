@@ -4,6 +4,8 @@ import com.sk89q.wepif.PermissionsResolverManager;
 import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.picklecraft.Modules.Counter.CounterModule;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.Modules.Ignore.IgnoreModule;
@@ -47,6 +49,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static final Logger log = Bukkit.getLogger();
 	public static final ModuleManager moduleManger = new ModuleManager(); 
+        public static final Pattern colorPattern = Pattern.compile("&");
 	
 	private static boolean worldedit;
 	
@@ -80,15 +83,20 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		}
 		return playerAndbool;
 	}
-	
-	/**
-	 * stole this from ichat's source :X 
-	 */
+
     public static String Colorize(String string) {
-        return string.replaceAll("(&([a-f0-9]))", "\u00A7$2");
+        Matcher m = colorPattern.matcher(string);
+        StringBuffer sb = new StringBuffer();
+        boolean result = m.find();
+        while(result) {
+            m.appendReplacement(sb, "\u00A7");
+            result = m.find();
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
     public String getStringFromConfig(String path) {
-    		return Colorize(getConfig().getString(path));
+        return Colorize(getConfig().getString(path));
     }
     public String getStringFromConfig(String path, Object... args) {
     	try {
