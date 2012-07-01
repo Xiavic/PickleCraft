@@ -75,8 +75,8 @@ public class IgnoreModule implements IModule {
 			Command c = plugin.getCommand("ignore");
 		     if (PickleCraftPlugin.hasPerm(player, "IgnoreCraft.ignore")) {
 				player.sendMessage(
-						plugin.getStringFromConfig("ignorecraft.messages.commandhelplist.header")
-						);
+                                    plugin.getStringFromConfig("ignorecraft.messages.commandhelplist.header")
+                                    );
 				player.sendMessage(c.getUsage() +" "+ c.getDescription());
 				c = plugin.getCommand("ignoreall");
 				player.sendMessage(c.getUsage() +" "+ c.getDescription());

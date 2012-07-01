@@ -56,7 +56,7 @@ public class ChatFormatModule implements IModule, Listener {
                 plugin.getServer().getPluginManager().registerEvents(this, plugin);
             }
             else {
-                PickleCraftPlugin.moduleManger.unloadModule(this);
+                PickleCraftPlugin.moduleManager.unloadModule(this);
                 PickleCraftPlugin.log.info("Could not find pex!");
             }
 	}

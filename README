@@ -7,8 +7,10 @@ As of right now it is dependent on bukkit which is to soon to be phased out with
 Goal for now is begin writing an simple but easy to use api so porting shall be easy.
 
 ChangeLog
+1.8.5 Added /tpaccept perm, optmize fixes, and chat format now exscapes %'s
+1.8.3 Added ChatFormater.
 1.8.2 Added automatic loadable internal components. 
-1.8 Added PickleCraft IRC bot! refactored package name to reflect new domain :P
+1.8 Refactored package name to reflect new domain :P
 1.7 Redone the module system.
 1.6.6 Logblock logs timber... add reload command.
 1.6.5 timber module

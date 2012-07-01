@@ -1,19 +1,13 @@
 package net.picklecraft;
 
+import com.google.gson.Gson;
 import com.sk89q.wepif.PermissionsResolverManager;
 import java.util.IllegalFormatException;
-import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.picklecraft.Modules.Counter.CounterModule;
 import net.picklecraft.Modules.IModule;
-import net.picklecraft.Modules.Ignore.IgnoreModule;
-import net.picklecraft.Modules.ModuleLoader;
 import net.picklecraft.Modules.ModuleManager;
-import net.picklecraft.Modules.SignRank.SignRankModule;
-import net.picklecraft.Modules.TeleportAsk.TeleportAskModule;
-import net.picklecraft.Modules.Timber.TimberModule;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -48,9 +42,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static final Logger log = Bukkit.getLogger();
-	public static final ModuleManager moduleManger = new ModuleManager(); 
+	public static ModuleManager moduleManager = null; 
         public static final Pattern colorPattern = Pattern.compile("&");
-	
+	private static final Gson gson = new Gson();
+        
 	private static boolean worldedit;
 	
 	/*
@@ -62,26 +57,26 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	 *  and the second value shall be false.
 	 */
 	public static Object[] getPlayer(String name) {
-		name = name.toLowerCase();
-		Object[] playerAndbool = new Object[2];
-		playerAndbool[0] = null;
-		playerAndbool[1] = false;
-		int playerMatch = 0;
-		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-			String name2 = p.getName().toLowerCase();
-			if (name2.contains(name)) { 
-				playerAndbool[0] = p;
-				if (name2.equals(name)) {
-					playerAndbool[1] = false;
-					break;
-				}
-				else if (++playerMatch > 1) {
-					playerAndbool[1] = true;
-					break;
-				}
-			}
-		}
-		return playerAndbool;
+            name = name.toLowerCase();
+            Object[] playerAndbool = new Object[2];
+            playerAndbool[0] = null;
+            playerAndbool[1] = false;
+            int playerMatch = 0;
+            for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                String name2 = p.getName().toLowerCase();
+                if (name2.contains(name)) { 
+                    playerAndbool[0] = p;
+                    if (name2.equals(name)) {
+                        playerAndbool[1] = false;
+                        break;
+                    }
+                    else if (++playerMatch > 1) {
+                        playerAndbool[1] = true;
+                        break;
+                    }
+                }
+            }
+            return playerAndbool;
 	}
 
     public static String Colorize(String string) {
@@ -100,39 +95,42 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
     }
     public String getStringFromConfig(String path, Object... args) {
     	try {
-    		return Colorize(String.format(getConfig().getString(path), args));
-		}
-		catch(IllegalFormatException e) {
-			e.printStackTrace();
-			return ChatColor.RED +"Check Config: "+ path;
-		}
+            return Colorize(String.format(getConfig().getString(path), args));
+        }
+        catch(IllegalFormatException e) {
+            e.printStackTrace();
+            return ChatColor.RED +"Check Config: "+ path;
+        }
     }
     
 	public static boolean hasPerm(Player player, String perm) {
-		if (worldedit) {
-			return PermissionsResolverManager.getInstance().hasPermission(player, perm);
-		}
-		return player.hasPermission(perm);
+            if (worldedit) {
+                return PermissionsResolverManager.getInstance().hasPermission(player, perm);
+            }
+            return player.hasPermission(perm);
 	}
 	
 	public static boolean hasWorldEdit() { return worldedit; }
 	
 	public void reload() {
-		Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin :o"));
-		Bukkit.getPluginManager().disablePlugin(this);
-		Bukkit.getPluginManager().enablePlugin(this);
-		//moduleManger.reloadModules();
+            Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin :o"));
+            Bukkit.getPluginManager().disablePlugin(this);
+            Bukkit.getPluginManager().enablePlugin(this);
+            moduleManager.reloadModules();
 	}
 
 	@Override
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
-		moduleManger.unloadModules();
+		moduleManager.unloadModules();
 		//saveConfig();
 	}
 
 	@Override
 	public void onEnable() {
+            if (moduleManager == null) {
+                moduleManager = new ModuleManager(this);
+            }
 		if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldEdit")){
 			PermissionsResolverManager.initialize(this); //wepif
 			PickleCraftPlugin.worldedit = true;
@@ -141,12 +139,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		saveConfig();
 		reloadConfig();
 		/* set up new modules */
-		List<String> mods = getConfig().getStringList("modules");
-                String[] ms = new String[mods.size()];
-                List<IModule> imods = ModuleLoader.getModules(this,mods.toArray(ms));
-                for (int i=0; i < imods.size(); i++) {
-                    moduleManger.loadModule(imods.get(i));
-                }
+                moduleManager.loadModules();
 		Bukkit.getPluginManager().registerEvents(this, this);
 
 	}
@@ -170,7 +163,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 			else {
 				PluginDescriptionFile pdfFile = this.getDescription();
 				sender.sendMessage(ChatColor.DARK_GREEN+pdfFile.getName() +" Version "+ pdfFile.getVersion());
-				for (IModule module : moduleManger.modules) {
+				for (IModule module : moduleManager.modules) {
 					module.sendCommandList(sender);
 				}
 			}
@@ -192,7 +185,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		}
 		else {
 			boolean success = false;
-			for (IModule module : moduleManger.modules) {
+			for (IModule module : moduleManager.modules) {
 				if (module.onCommand(sender, command, label, args) == true) { 
 					success = true; 
 				}

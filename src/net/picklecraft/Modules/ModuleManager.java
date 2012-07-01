@@ -2,6 +2,7 @@ package net.picklecraft.Modules;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.picklecraft.PickleCraftPlugin;
 /**
  * Copyright (c) 2011-2012
  * 
@@ -24,61 +25,70 @@ import java.util.List;
 public class ModuleManager {
 	public final List<IModule> modules = new ArrayList<IModule>();
 	
-	public void reloadModule(IModule module) {
-		if (module != null) {
-			unloadModule(module);
-		}
-	}
+        private PickleCraftPlugin plugin;
+        public ModuleManager(PickleCraftPlugin plugin) {
+            this.plugin = plugin;
+        }
+        public void loadModules() {
+            List<String> mods = plugin.getConfig().getStringList("modules");
+                String[] ms = new String[mods.size()];
+                List<IModule> imods = ModuleLoader.getModules(plugin,mods.toArray(ms));
+                for (int i = 0; i < imods.size(); i++) {
+                    loadModule(imods.get(i));
+                }
+        }
 	public void reloadModules() {
             for (IModule module : modules) {
-                    reloadModule(module);
+                unloadModule(module);
             }
+            modules.clear();
+            loadModules();
 	}
-	
+     
 	public void loadModule(IModule module) {
             if (module != null) {
-                    module.onEnable();
-                    modules.add(module);
+                module.onEnable();
+                modules.add(module);
             }
 	}
 
 	public void unloadModule(IModule module) {
-		if (module != null) {
-			module.onDisable();
-			modules.remove(module);
-		}
+            if (module != null) {
+                module.onDisable();
+                modules.remove(module);
+            }
 	}
 	public void unloadModules() {
-		for (IModule module : modules) {
-			module.onDisable();
-		}
-		modules.clear();
+            for (IModule module : modules) {
+                module.onDisable();
+            }
+            modules.clear();
 	}
 	
 	public void enableModule(IModule module) {
-		module.onEnable();
+            module.onEnable();
 	}
 	public void enableModules() {
-		for (IModule module : modules) {
-			module.onEnable();
-		}
+            for (IModule module : modules) {
+                module.onEnable();
+            }
 	}
 	public void disableModule(IModule module) {
-		module.onDisable();
+            module.onDisable();
 	}
 	public void disableModules() {
-		for (IModule module : modules) {
-			module.onDisable();
-		}
+            for (IModule module : modules) {
+                module.onDisable();
+            }
 	}
 	
 	public IModule getModule(String name) {
-		for (IModule module : modules) {
-			if (module.getName().equals(name)) { 
-				return module;
-			}
-		}
-		return null;    
+            for (IModule module : modules) {
+                if (module.getName().equals(name)) { 
+                    return module;
+                }
+            }
+            return null;    
 	}
 
 }

@@ -1,15 +1,8 @@
 package net.picklecraft.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Copyright (c) 2011-2012
@@ -68,15 +61,14 @@ public class Properties {
 	 */
 	public void Parse() {
 		try {
-			 BufferedReader inputStream = new BufferedReader(new FileReader(propFile));
-			 String line;
-			while ((line = inputStream.readLine()) != null) {
-				String[] Tokens = line.split("=");
-				if (Tokens.length >= 2) {
-					prop.put(Tokens[0], Tokens[1]);
-				}
-				
-			}
+                    BufferedReader inputStream = new BufferedReader(new FileReader(propFile));
+                    String line;
+                    while ((line = inputStream.readLine()) != null) {
+                        String[] Tokens = line.split("=");
+                        if (Tokens.length >= 2) {
+                                prop.put(Tokens[0], Tokens[1]);
+                        }
+                    }
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -104,7 +96,7 @@ public class Properties {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			net.picklecraft.PickleCraftPlugin.log.fine("IgnoreCraft Saved");
+			net.picklecraft.PickleCraftPlugin.log.fine("PickleCraft Saved");
 		}
 	}
 	

@@ -51,7 +51,7 @@ public class SignRankModule implements IModule {
 			plugin.getServer().getPluginManager().registerEvents(srPlayerListener, plugin);
 		}
 		else {
-			PickleCraftPlugin.moduleManger.unloadModule(this);
+			PickleCraftPlugin.moduleManager.unloadModule(this);
 			PickleCraftPlugin.log.info("Could not find pex!");
 		}
 	}
