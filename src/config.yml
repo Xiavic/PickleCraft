@@ -2,6 +2,7 @@ modules:
 - net.picklecraft.Modules.Ignore.IgnoreModule
 - net.picklecraft.Modules.TeleportAsk.TeleportAskModule
 - net.picklecraft.Modules.ChatFormat.ChatFormatModule
+- net.picklecraft.Modules.Counter.CounterModule
 - net.picklecraft.Modules.PrivateWarps.PWModule
 - net.picklecraft.Modules.SignRank.SignRankModule
 - net.picklecraft.Modules.Timber.TimberModule
@@ -71,7 +72,9 @@ privatewarps:
         commandhelplist:
             header: '&2----PrivateWarps commands----'
         errors:
-            nowarps: '&2You have no warps.'
+            nowarps: '&4You have no warps.'
+            warpnoexist: '&4Warp %s doesn''t exist.'
+            warpexist: '&4Warp %s already exists.'
         info:
             warpset: '&2Warp set.'
             warpremove: '&2Warp Removed.'

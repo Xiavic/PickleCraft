@@ -154,7 +154,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
                     if (args.length > 0) {
                         if (player !=null) {
                             if (hasPerm(player,"PickleCraft.reload")) {
-                                if (args[1].equalsIgnoreCase("reload")) {
+                                if (args[0].equalsIgnoreCase("reload")) {
                                     reload();
                                 }
                             }

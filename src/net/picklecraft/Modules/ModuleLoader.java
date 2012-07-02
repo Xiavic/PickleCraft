@@ -38,9 +38,9 @@ public class ModuleLoader {
                     if (IModule.class.isAssignableFrom(c)) {
                         Constructor<?> con = c.getConstructor(PickleCraftPlugin.class);
                         modules.add((IModule)con.newInstance(plugin));
-                        PickleCraftPlugin.log.log(Level.INFO,"Loaded Module {0}",moduleList[s]);
+                        PickleCraftPlugin.log.log(Level.INFO, "Loaded Module {0}", moduleList[s]);
                     }
-                }  catch (InvocationTargetException ex) {
+                } catch (InvocationTargetException ex) {
                     Logger.getLogger(ModuleLoader.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (InstantiationException ex) {
                     PickleCraftPlugin.log.log(Level.SEVERE, "Failed to To instantiate module {0}", moduleList[s]);

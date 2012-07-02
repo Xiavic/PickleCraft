@@ -58,6 +58,7 @@ public class PWPlayer {
         if (getWarp(name) == null) {
             Warp warp = new Warp(name,location);
             warps.add(warp);
+            return true;
         }
         return false;
     }

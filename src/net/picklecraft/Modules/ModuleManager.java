@@ -30,9 +30,9 @@ public class ModuleManager {
             this.plugin = plugin;
         }
         public void loadModules() {
-            List<String> mods = plugin.getConfig().getStringList("modules");
+            List<String> mods = this.plugin.getConfig().getStringList("modules");
                 String[] ms = new String[mods.size()];
-                List<IModule> imods = ModuleLoader.getModules(plugin,mods.toArray(ms));
+                List<IModule> imods = ModuleLoader.getModules(this.plugin,mods.toArray(ms));
                 for (int i = 0; i < imods.size(); i++) {
                     loadModule(imods.get(i));
                 }

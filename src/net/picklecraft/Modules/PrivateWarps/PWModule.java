@@ -2,12 +2,11 @@ package net.picklecraft.Modules.PrivateWarps;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.Location;
@@ -15,6 +14,10 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldSaveEvent;
 /**
  * Copyright (c) 2011-2012
  * 
@@ -34,13 +37,23 @@ import org.bukkit.entity.Player;
  * @author Pickle
  * 
  */
-public class PWModule implements IModule {
+public class PWModule implements IModule, Listener {
 	public List<PWPlayer> players = new ArrayList<PWPlayer>();
 	
 	private PickleCraftPlugin plugin;
+        private File pwFile;
 	
 	public PWModule(PickleCraftPlugin plugin) {
             this.plugin = plugin;
+            pwFile = new File(plugin.getDataFolder() +"/warps.json");
+            if (!pwFile.exists()) {
+                try {
+                    //pwFile.mkdirs();
+                    pwFile.createNewFile();
+                } catch (IOException ex) {
+                    Logger.getLogger(PWModule.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 	}
 	
 	@Override
@@ -58,6 +71,7 @@ public class PWModule implements IModule {
 
 	@Override
 	public void onEnable() {
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
             Load();
 	}
 	
@@ -108,6 +122,7 @@ public class PWModule implements IModule {
                                     }
                                     return true;
                                 }
+                                return false;
                             }
                             else {
                                 player.sendMessage(
@@ -117,8 +132,8 @@ public class PWModule implements IModule {
                             }	
 			}
 			else {
-				sender.sendMessage("This is a player only command.");
-				return true;
+                            sender.sendMessage("This is a player only command.");
+                            return true;
 			}
                 }
 		return false;
@@ -130,26 +145,53 @@ public class PWModule implements IModule {
                     return p;
                 }
             }
-            return null;
+            PWPlayer p = new PWPlayer(player.getName());
+            players.add(p);
+            return p;
         }
         
         private void setWarp(Player player, String name) {
-            if (!name.isEmpty()) {
+            if (name != null) {
                 PWPlayer p = getWarpPlayer(player);
-                p.setWarp(name, player.getLocation());
+                if (p.setWarp(name, player.getLocation())) {
+                    player.sendMessage(
+                        plugin.getStringFromConfig("privatewarps.messages.info.warpset")
+                        );
+                }
+                else {
+                    player.sendMessage(
+                        plugin.getStringFromConfig("privatewarps.messages.errors.warpexist",name)
+                        );
+                }
             }
         }
         private void removeWarp(Player player, String name) {
-            if (!name.isEmpty()) {
+            if (name != null) {
                 PWPlayer p = getWarpPlayer(player);
-                p.removeWarp(name);
+                if (p.removeWarp(name)) {
+                    player.sendMessage(
+                        plugin.getStringFromConfig("privatewarps.messages.info.warpremove")
+                        );
+                }
+                else {
+                    player.sendMessage(
+                        plugin.getStringFromConfig("privatewarps.messages.errors.warpnoexist",name)
+                        );
+                }
             }
         }
         private void teleportToWarp(Player player, String name) {
-            if (!name.isEmpty()) {
+            if (name != null) {
                 PWPlayer p = getWarpPlayer(player);
                 Warp warp = p.getWarp(name);
-                player.teleport(warp.getLocation());
+                if (warp != null) {
+                    player.teleport(warp.getLocation());
+                }
+                else {
+                    player.sendMessage(
+                        plugin.getStringFromConfig("privatewarps.messages.errors.warpnoexist",name)
+                        );
+                }
             }
         }
         private void listWarps(Player player) {
@@ -162,26 +204,29 @@ public class PWModule implements IModule {
             }
             else {
                 StringBuilder s = new StringBuilder();
-                s.append("&2");
-                s.append("Warps: ");
+                s.append("&2Warps: ");
                 for (int i = 0; i < warps.size(); i++) {
-                    int c = i % 5;
+                    s.append("&e");
                     s.append(warps.get(i).getName());
-                    s.append(", ");
-                    if (c == 0) { 
+                    s.append(",");
+                    if (i % 8 == 0 && i != 0 ) { 
                         player.sendMessage(PickleCraftPlugin.Colorize(s.toString()));
                         s = new StringBuilder();
-                        s.append("&2");
                     }
+                }
+                String d = s.toString();
+                if (!d.isEmpty()) {
+                    //incase not enough indexs to fire the sendmessage in le loop :c
+                    player.sendMessage(PickleCraftPlugin.Colorize(d));
                 }
             }
         }
         
 	public void Save() {
             try {
-               File f = new File(plugin.getDataFolder() +"/warps.json");
-               FileWriter fw = new FileWriter(f);
+               FileWriter fw = new FileWriter(pwFile);
                JsonWriter writer = new JsonWriter(fw);
+               writer.setIndent(" ");
                writer.beginArray();
                for (PWPlayer player : players) {
                    writer.beginObject();
@@ -194,9 +239,9 @@ public class PWModule implements IModule {
                             writer.name("name").value(w.getName());
                             writer.name("location");
                             writer.beginObject();
-                            writer.name("x").value(w.getLocation().getX());
-                            writer.name("y").value(w.getLocation().getY());
-                            writer.name("z").value(w.getLocation().getZ());
+                            writer.name("x").value((int)w.getLocation().getX());
+                            writer.name("y").value((int)w.getLocation().getY());
+                            writer.name("z").value((int)w.getLocation().getZ());
                             writer.name("world").value(w.getLocation().getWorld().getName());
                             writer.endObject();
                             writer.endObject();
@@ -221,8 +266,7 @@ public class PWModule implements IModule {
 	public void Load() {
             try {
                 PWPlayer player = null;
-                File f = new File(plugin.getDataFolder() +"/warps.json");
-                FileReader fr = new FileReader(f);
+                FileReader fr = new FileReader(pwFile);
                 JsonReader reader = new JsonReader(fr);
                 reader.beginArray();
                 while(reader.hasNext()) {
@@ -234,37 +278,42 @@ public class PWModule implements IModule {
                         }
                         else if (name.equalsIgnoreCase("warps")) {
                             reader.beginArray();
-                            String warpname = "";
-                            Location loc = new Location(null,0,0,0);
                             while (reader.hasNext()) {
-                                String n = reader.nextName();
-                                if (n.equalsIgnoreCase("name")) {
-                                    warpname = reader.nextString();
-                                }
-                                else if (n.equalsIgnoreCase("location")) {
-                                    reader.beginObject();
-                                    while (reader.hasNext()) {
-                                        String a = reader.nextName();
-                                        if (a.equalsIgnoreCase("x")) {
-                                           loc.setX(reader.nextInt());
-                                        }
-                                        else if (a.equalsIgnoreCase("y")) {
-                                           loc.setX(reader.nextInt());
-                                        }
-                                        else if (a.equalsIgnoreCase("z")) {
-                                           loc.setX(reader.nextInt());
-                                        }
-                                        else if (a.equalsIgnoreCase("world")) {
-                                            World w = plugin.getServer().getWorld(reader.nextString());
-                                            loc.setWorld(w);
-                                        }
+                                String warpname = "";
+                                Location loc = new Location(null,0,0,0);
+                                reader.beginObject();
+                                while (reader.hasNext()) {
+                                    String n = reader.nextName();
+                                    if (n.equalsIgnoreCase("name")) {
+                                        warpname = reader.nextString();
                                     }
-                                    reader.endObject();
+                                    else if (n.equalsIgnoreCase("location")) {
+                                        reader.beginObject();
+                                        while (reader.hasNext()) {
+                                            String a = reader.nextName();
+                                            if (a.equalsIgnoreCase("x")) {
+                                            loc.setX(reader.nextInt());
+                                            }
+                                            else if (a.equalsIgnoreCase("y")) {
+                                            loc.setY(reader.nextInt());
+                                            }
+                                            else if (a.equalsIgnoreCase("z")) {
+                                            loc.setZ(reader.nextInt());
+                                            }
+                                            else if (a.equalsIgnoreCase("world")) {
+                                                World w = plugin.getServer().getWorld(reader.nextString());
+                                                loc.setWorld(w);
+                                            }
+                                        }
+                                        reader.endObject();
+                                    }
+                                }
+                                reader.endObject();
+                                if (!warpname.isEmpty()) {
+                                    player.setWarp(warpname, loc);
                                 }
                             }
-                            if (!warpname.isEmpty()) {
-                                player.setWarp(warpname, loc);
-                            }
+                            
                             reader.endArray();
                         }
                     }
@@ -275,10 +324,18 @@ public class PWModule implements IModule {
                reader.endArray();
                reader.close();
                fr.close();
-            }
-            catch (IOException e) {
+            } catch (EOFException e) {
+                //Ignore.
+            } catch (IOException e) {
                 e.printStackTrace();
-            }
+            } 
+	}
+        
+        
+        @EventHandler(priority = EventPriority.LOW)
+	public void onWorldSave(WorldSaveEvent event) {
+            //save json when the world does.
+            Save();
 	}
 
 }

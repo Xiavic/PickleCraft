@@ -7,6 +7,7 @@ As of right now it is dependent on bukkit which is to soon to be phased out with
 Goal for now is begin writing an simple but easy to use api so porting shall be easy.
 
 ChangeLog
+1.9 Added PrivateWarps and json (gson) parser to replace the old properties files...(soon to come)
 1.8.5 Added /tpaccept perm, optmize fixes, and chat format now exscapes %'s
 1.8.3 Added ChatFormater.
 1.8.2 Added automatic loadable internal components. 
