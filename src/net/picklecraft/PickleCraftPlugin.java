@@ -44,7 +44,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static final Logger log = Bukkit.getLogger();
 	public static ModuleManager moduleManager = null; 
         public static final Pattern colorPattern = Pattern.compile("&");
-	private static final Gson gson = new Gson();
+	public static final Gson gson = new Gson();
         
 	private static boolean worldedit;
 	
@@ -148,19 +148,19 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = null;
 		if (sender instanceof Player) {
-			player = (Player) sender;
+                    player = (Player) sender;
 		}
 		if (command.getName().equalsIgnoreCase("picklecraft")){ 
-			if (args.length > 0) {
-				if (player !=null) {
-					if (hasPerm(player,"PickleCraft.reload")) {
-						if (args[1].equalsIgnoreCase("reload")) {
-							reload();
-						}
-					}
-				}
-			}
-			else {
+                    if (args.length > 0) {
+                        if (player !=null) {
+                            if (hasPerm(player,"PickleCraft.reload")) {
+                                if (args[1].equalsIgnoreCase("reload")) {
+                                    reload();
+                                }
+                            }
+                        }
+                    }
+                    else {
 				PluginDescriptionFile pdfFile = this.getDescription();
 				sender.sendMessage(ChatColor.DARK_GREEN+pdfFile.getName() +" Version "+ pdfFile.getVersion());
 				for (IModule module : moduleManager.modules) {

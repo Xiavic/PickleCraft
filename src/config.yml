@@ -1,7 +1,10 @@
 modules: 
 - net.picklecraft.Modules.Ignore.IgnoreModule
 - net.picklecraft.Modules.TeleportAsk.TeleportAskModule
-- net.picklecraft.Modules.Counter.CounterModule
+- net.picklecraft.Modules.ChatFormat.ChatFormatModule
+- net.picklecraft.Modules.PrivateWarps.PWModule
+- net.picklecraft.Modules.SignRank.SignRankModule
+- net.picklecraft.Modules.Timber.TimberModule
 common:
   messages:
     errors:
@@ -62,4 +65,14 @@ counter:
         commandhelplist:
             header: '&2----SignCounter----'
             msg: '&2Place a sign with %s and power with redstone!'
-    
+            
+privatewarps:
+    messages:
+        commandhelplist:
+            header: '&2----PrivateWarps commands----'
+        errors:
+            nowarps: '&2You have no warps.'
+        info:
+            warpset: '&2Warp set.'
+            warpremove: '&2Warp Removed.'
+            

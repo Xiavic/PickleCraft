@@ -40,6 +40,10 @@ commands:
         permission: PickleCraft.teleport.return
         description: Returns to last location before a teleport.
         usage: /tpareturn
+    pw:
+        permission: PickleCraft.privatewarps
+        description: Set,list,or removes private warps.
+        usage: /pw [SET,REMOVE,LIST] [name]
     picklecraft:
         description: Help command
         usage: 
@@ -53,6 +57,7 @@ permissions:
      PickleCraft.teleport.coord: true
      PickleCraft.teleport.dualplayers: true
      PickleCraft.teleport.return: true
+     PickleCraft.timber: true
     
  PickleCraft.ignore:
    description: Allows use of ignore commands.
@@ -92,4 +97,7 @@ permissions:
    default: true
  PickleCraft.timber.cut.jungle:
    description: Allows mass log cutting.
-   default: true 
+   default: true
+ PickleCraft.privatewarps:
+   description: allows privatewarps.
+   default: true

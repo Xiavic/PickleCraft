@@ -2,11 +2,9 @@ package net.picklecraft.Modules.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import net.picklecraft.PickleCraftPlugin;
 import net.picklecraft.Modules.IModule;
+import net.picklecraft.PickleCraftPlugin;
 import net.picklecraft.util.Properties;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -73,7 +71,7 @@ public class IgnoreModule implements IModule {
 		}
 		if (player != null) {
 			Command c = plugin.getCommand("ignore");
-		     if (PickleCraftPlugin.hasPerm(player, "IgnoreCraft.ignore")) {
+		     if (PickleCraftPlugin.hasPerm(player, c.getPermission())) {
 				player.sendMessage(
                                     plugin.getStringFromConfig("ignorecraft.messages.commandhelplist.header")
                                     );

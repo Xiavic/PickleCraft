@@ -49,7 +49,8 @@ public class Pony {
 			"Jarvis <3 ponies! jk ;D",
 			rainbowizeString("SONIC RAINBOOM"),
 			rainbowizeString("ATOMIC RAINBOOM"),
-			rainbowizeString("RAINBOW FIRE TRAIL!"),	
+			rainbowizeString("RAINBOW FIRE TRAIL!"),
+                        rainbowizeString("MLP:FIM IS TEH BEST!")
 			};
 	private static Random r = new Random();
 
