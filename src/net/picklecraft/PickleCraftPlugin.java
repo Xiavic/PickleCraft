@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.sk89q.wepif.PermissionsResolverManager;
 import java.util.IllegalFormatException;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.Modules.ModuleManager;
@@ -43,8 +42,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static final Logger log = Bukkit.getLogger();
 	public static ModuleManager moduleManager = null;
-        public static final Pattern colorPattern = Pattern.compile("&");
-        public static final Pattern colorStripPattern = Pattern.compile("&[klmno]");
+	public static final Pattern colorPattern = Pattern.compile("&");
+        public static final Pattern colorStripPattern = Pattern.compile("&[0-9a-fk-rA-FK-R]");
+        public static final Pattern colorSpecialStripPattern = Pattern.compile("&[klmno]");
 
 	public static final Gson gson = new Gson();
 
@@ -82,37 +82,22 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	}
 
     public static String Colorize(String string) {
-        Matcher m = colorPattern.matcher(string);
-        StringBuffer sb = new StringBuffer();
-        boolean result = m.find();
-        while(result) {
-            m.appendReplacement(sb, "\u00A7");
-            result = m.find();
-        }
-        m.appendTail(sb);
-        return sb.toString();
+        return colorPattern.matcher(string).replaceAll("\u00A7");
     }
     /*
      * Strips annoying colors from players without perm.
      */
-    public static String Colorize(String string, Player player) {
-        if (PickleCraftPlugin.hasPerm(player, "PickleCraft.color")) {
-            if (PickleCraftPlugin.hasPerm(player, "PickleCraft.color.special")) {
+    public static String StripColor(String string, Player player) {
+        if (PickleCraftPlugin.hasPerm(player, "PickleCraft.colors")) {
+            if (PickleCraftPlugin.hasPerm(player, "PickleCraft.colors.special")) {
                 /* Do nothing. */
-                return Colorize(string);
+                return string;
             }
             /*strip annoying colors like "&k" */
-            Matcher m = colorStripPattern.matcher(string);
-            StringBuffer sb2 = new StringBuffer();
-            boolean result = m.find();
-            while(result) {
-                m.appendReplacement(sb2, "");
-                result = m.find();
-            }
-            m.appendTail(sb2);
-            return Colorize(sb2.toString());
+            return colorSpecialStripPattern.matcher(string).replaceAll("");
         }
-        return string;
+	//strip all colors.
+        return colorStripPattern.matcher(string).replaceAll("");
     }
 
     public String getStringFromConfig(String path) {
@@ -138,7 +123,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static boolean hasWorldEdit() { return worldedit; }
 
 	public void reload() {
-            Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin :o"));
+            Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin!"));
             Bukkit.getPluginManager().disablePlugin(this);
             Bukkit.getPluginManager().enablePlugin(this);
             moduleManager.reloadModules();

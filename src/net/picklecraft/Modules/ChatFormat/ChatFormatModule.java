@@ -101,16 +101,9 @@ public class ChatFormatModule implements IModule, Listener {
              * exscape "%" in the message
              * also, remove undesired coloring.
              */
-            Matcher m = pattern.matcher(PickleCraftPlugin.Colorize(event.getMessage(),event.getPlayer()));
-            StringBuffer sb2 = new StringBuffer();
-            boolean result = m.find();
-            while(result) {
-                m.appendReplacement(sb2, "%%");
-                result = m.find();
-            }
-            m.appendTail(sb2);
-
-            sb.append(sb2.toString());
+	    String message = PickleCraftPlugin.StripColor(event.getMessage(),event.getPlayer());
+            Matcher m = pattern.matcher(message);
+            sb.append(m.replaceAll("%%"));
             event.setFormat(PickleCraftPlugin.Colorize(sb.toString()));
         }
 }

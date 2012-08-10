@@ -10,35 +10,35 @@ import org.bukkit.entity.Player;
 
 /**
  * Copyright (c) 2011-2012
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Pickle
- * 
+ *
  */
 
 public class TeleportAskModule implements IModule {
- 
+
     public List<TeleportPlayer> teleportPlayerList = new ArrayList<TeleportPlayer>();
-	
+
 	private PickleCraftPlugin plugin;
-	
+
 	private TAskPlayerListener taPlayerListener;
 	public TeleportAskModule(PickleCraftPlugin plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	public TeleportPlayer getTeleportPlayer(Player player) {
 		if (player != null) {
 			for (TeleportPlayer p : teleportPlayerList) {
@@ -117,7 +117,7 @@ public class TeleportAskModule implements IModule {
 		/**
 		 * send a teleport request
 		 */
-		if (command.getName().equalsIgnoreCase("tpa")){ 
+		if (command.getName().equalsIgnoreCase("tpa")){
 			if (player != null) {
 				if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
 					/**
@@ -125,9 +125,9 @@ public class TeleportAskModule implements IModule {
 					 *  playerC to playerB
 					 */
 					 if (args.length >= 2) {
-						if (PickleCraftPlugin.hasPerm(player, "IgnoreCraft.teleport.dualplayers")) {
-							Object[] player_B_Andbool = PickleCraftPlugin.getPlayer(args[1]); 
-							Object[] player_C_Andbool = PickleCraftPlugin.getPlayer(args[0]); 
+						if (PickleCraftPlugin.hasPerm(player, "PickleCraft.teleport.dualplayers")) {
+							Object[] player_B_Andbool = PickleCraftPlugin.getPlayer(args[1]);
+							Object[] player_C_Andbool = PickleCraftPlugin.getPlayer(args[0]);
 							Player pB = (Player) player_B_Andbool[0]; //playerB
 							Player pC = (Player) player_C_Andbool[0]; //playerC
 							if (pB != null) {
@@ -170,7 +170,7 @@ public class TeleportAskModule implements IModule {
 													plugin.getStringFromConfig("common.messages.errors.tomanyplayers"
 													,args[0])
 													);
-										}							
+										}
 									}
 									else {
 										player.sendMessage(
@@ -205,7 +205,7 @@ public class TeleportAskModule implements IModule {
 					  */
 					else if (args.length >= 1) {
 						Object[] playerAndbool = PickleCraftPlugin.getPlayer(args[0]);
-						Player p = (Player) playerAndbool[0]; 
+						Player p = (Player) playerAndbool[0];
 						if (p != null) {
 							if ((Boolean)playerAndbool[1] == false) {
                                                             Command c = plugin.getCommand("tpaccept");
@@ -218,7 +218,7 @@ public class TeleportAskModule implements IModule {
                                                                     , p.getName())
                                                                     );
                                                             }
-								
+
 							}
 							else {
 								player.sendMessage(
@@ -232,8 +232,8 @@ public class TeleportAskModule implements IModule {
 									plugin.getStringFromConfig("common.messages.errors.playerdontexist"
 									, args[0])
 									);
-						}	
-						return true;					
+						}
+						return true;
 					}
 				}
 				else {
@@ -299,12 +299,12 @@ public class TeleportAskModule implements IModule {
 		/**
 		 * similar to TPA but teleports playerB to playerA
 		 */
-		else if (command.getName().equalsIgnoreCase("tpahere")){ 
+		else if (command.getName().equalsIgnoreCase("tpahere")){
 			if (player != null) {
 				if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
 					if (args.length >= 1) {
 						Object[] playerAndbool = PickleCraftPlugin.getPlayer(args[0]);
-						Player p = (Player) playerAndbool[0]; 
+						Player p = (Player) playerAndbool[0];
 						if (p != null) {
 							if ((Boolean)playerAndbool[1] == false) {
                                                             Command c = plugin.getCommand("tpaccept");
@@ -333,11 +333,11 @@ public class TeleportAskModule implements IModule {
 						}
 						return true;
 					}
-				}	
+				}
 				else {
 					player.sendMessage(
 							plugin.getStringFromConfig("common.messages.errors.donthaveperm")
-							);	
+							);
 					return true;
 				}
 			}
@@ -349,7 +349,7 @@ public class TeleportAskModule implements IModule {
 		/**
 		 * accept request?
 		 */
-		else if (command.getName().equalsIgnoreCase("tpaccept")){ 
+		else if (command.getName().equalsIgnoreCase("tpaccept")){
 			if (player != null) {
                             if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
 				getTeleportPlayer(player).Accept();
@@ -357,19 +357,19 @@ public class TeleportAskModule implements IModule {
                             else {
                                 player.sendMessage(
                                                 plugin.getStringFromConfig("common.messages.errors.donthaveperm")
-                                                );	
+                                                );
                                 return true;
                             }
 			}
 			else {
 				sender.sendMessage("This is a player only command.");
-			}	
+			}
 			return true;
-		}	
+		}
 		/**
 		 * Nope! chuck testa!
 		 */
-		else if (command.getName().equalsIgnoreCase("tpdeny")){ 
+		else if (command.getName().equalsIgnoreCase("tpdeny")){
 			if (player != null) {
 				getTeleportPlayer(player).Deny();
 			}
@@ -389,7 +389,7 @@ public class TeleportAskModule implements IModule {
 				else {
 					player.sendMessage(
 							plugin.getStringFromConfig("common.messages.errors.donthaveperm")
-							);	
+							);
 					return true;
 				}
 			}
@@ -400,6 +400,6 @@ public class TeleportAskModule implements IModule {
 		}
 		return false;
 	}
-	
-	
+
+
 }
