@@ -1,7 +1,7 @@
 name: PickleCraft
 main: net.picklecraft.PickleCraftPlugin
 author: Pickle
-version: 1.9
+version: 1.9.5
 description: Adds various usefull things.
 softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:
@@ -46,7 +46,7 @@ commands:
         usage: /pw [SET,REMOVE,LIST] [name]
     picklecraft:
         description: Help command
-        usage: 
+        usage:
 permissions:
  PickleCraft.*:
    description: Full access.
@@ -58,7 +58,8 @@ permissions:
      PickleCraft.teleport.dualplayers: true
      PickleCraft.teleport.return: true
      PickleCraft.timber: true
-    
+     PickleCraft.privatewarps: true
+     PickleCraft.counter.build: true
  PickleCraft.ignore:
    description: Allows use of ignore commands.
    default: true
@@ -100,4 +101,10 @@ permissions:
    default: true
  PickleCraft.privatewarps:
    description: allows privatewarps.
+   default: true
+ PickleCraft.colors:
+   description: allow colors in chatformater.
+   default: true
+ PickleCraft.colors.special:
+   description: allow special colors in chatformater.
    default: true

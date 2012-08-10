@@ -6,40 +6,42 @@ import java.util.Map;
 import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Copyright (c) 2011-2012
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Pickle
- * 
+ *
+ *
+ * This is old, Replace with json <3
  */
 public class Properties {
 	public Map<String, String> prop = new HashMap<String,String>();
 
 	private File propFile;
-	
+
 	public Properties(JavaPlugin plugin, String file) {
 		propFile = new File(plugin.getDataFolder(), file);
 		if (!plugin.getDataFolder().exists()) { plugin.getDataFolder().mkdir(); }
-		if (!propFile.exists()) { 
+		if (!propFile.exists()) {
 			try {
 				propFile.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
-			} 
+			}
 		}
 	}
-	
+
 	public String getValue(String key) {
 		if (prop.containsKey(key)) {
 			return prop.get(key);
@@ -49,15 +51,15 @@ public class Properties {
 	public void addValue(String key, String value) {
 			prop.put(key, value);
 	}
-	
-	
+
+
 	public void remove(String key) {
 			prop.remove(key);
 	}
-	
+
 	/*
 	 * Parses data from a file....
-	 * 
+	 *
 	 */
 	public void Parse() {
 		try {
@@ -99,5 +101,5 @@ public class Properties {
 			net.picklecraft.PickleCraftPlugin.log.fine("PickleCraft Saved");
 		}
 	}
-	
+
 }

@@ -23,36 +23,38 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Copyright (c) 2011-2012
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Pickle
- * 
+ *
  */
 public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static final Logger log = Bukkit.getLogger();
-	public static ModuleManager moduleManager = null; 
+	public static ModuleManager moduleManager = null;
         public static final Pattern colorPattern = Pattern.compile("&");
+        public static final Pattern colorStripPattern = Pattern.compile("&[klmno]");
+
 	public static final Gson gson = new Gson();
-        
+
 	private static boolean worldedit;
-	
+
 	/*
 	 * returns Player and a Boolean (that defines if multiple players was found).
 	 * first value will be Player
 	 * second will be Boolean
-	 * 
+	 *
 	 * Will return if An exact match was found,
 	 *  and the second value shall be false.
 	 */
@@ -64,7 +66,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
             int playerMatch = 0;
             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                 String name2 = p.getName().toLowerCase();
-                if (name2.contains(name)) { 
+                if (name2.contains(name)) {
                     playerAndbool[0] = p;
                     if (name2.equals(name)) {
                         playerAndbool[1] = false;
@@ -90,6 +92,29 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
         m.appendTail(sb);
         return sb.toString();
     }
+    /*
+     * Strips annoying colors from players without perm.
+     */
+    public static String Colorize(String string, Player player) {
+        if (PickleCraftPlugin.hasPerm(player, "PickleCraft.color")) {
+            if (PickleCraftPlugin.hasPerm(player, "PickleCraft.color.special")) {
+                /* Do nothing. */
+                return Colorize(string);
+            }
+            /*strip annoying colors like "&k" */
+            Matcher m = colorStripPattern.matcher(string);
+            StringBuffer sb2 = new StringBuffer();
+            boolean result = m.find();
+            while(result) {
+                m.appendReplacement(sb2, "");
+                result = m.find();
+            }
+            m.appendTail(sb2);
+            return Colorize(sb2.toString());
+        }
+        return string;
+    }
+
     public String getStringFromConfig(String path) {
         return Colorize(getConfig().getString(path));
     }
@@ -102,16 +127,16 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
             return ChatColor.RED +"Check Config: "+ path;
         }
     }
-    
+
 	public static boolean hasPerm(Player player, String perm) {
             if (worldedit) {
                 return PermissionsResolverManager.getInstance().hasPermission(player, perm);
             }
             return player.hasPermission(perm);
 	}
-	
+
 	public static boolean hasWorldEdit() { return worldedit; }
-	
+
 	public void reload() {
             Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin :o"));
             Bukkit.getPluginManager().disablePlugin(this);
@@ -143,14 +168,14 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, this);
 
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = null;
 		if (sender instanceof Player) {
                     player = (Player) sender;
 		}
-		if (command.getName().equalsIgnoreCase("picklecraft")){ 
+		if (command.getName().equalsIgnoreCase("picklecraft")){
                     if (args.length > 0) {
                         if (player !=null) {
                             if (hasPerm(player,"PickleCraft.reload")) {
@@ -168,8 +193,8 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 				}
 			}
 			return true;
-		}	
-		else if (command.getName().equalsIgnoreCase("pony")){ 
+		}
+		else if (command.getName().equalsIgnoreCase("pony")){
 			if (player != null) {
 				if (args.length >= 1) {
 					Pony.Say(player, args[0]);
@@ -186,18 +211,18 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		else {
 			boolean success = false;
 			for (IModule module : moduleManager.modules) {
-				if (module.onCommand(sender, command, label, args) == true) { 
-					success = true; 
+				if (module.onCommand(sender, command, label, args) == true) {
+					success = true;
 				}
 			}
 			return success;
 		}
 	}
-	
+
 	public void Damage(Player player,int amount) {
 		player.getItemInHand().setDurability((short) (player.getItemInHand().getDurability() + amount));
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPluginDisabled(PluginDisableEvent event) {
 		if ("WorldEdit".equals(event.getPlugin().getName())) {

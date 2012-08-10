@@ -24,11 +24,9 @@ public class TimberBlockListener implements Listener {
 					return;
 				}
 				if (PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.timber.cut")) {
-					if (event.getPlayer().getItemInHand().getType() == Material.WOOD_AXE
-					|| event.getPlayer().getItemInHand().getType() == Material.STONE_AXE
-					|| event.getPlayer().getItemInHand().getType() == Material.IRON_AXE
+					if (event.getPlayer().getItemInHand().getType() == Material.IRON_AXE
 					|| event.getPlayer().getItemInHand().getType() == Material.GOLD_AXE
-					|| event.getPlayer().getItemInHand().getType() == Material.DIAMOND_AXE) { 
+					|| event.getPlayer().getItemInHand().getType() == Material.DIAMOND_AXE) {
 						module.CutTree(event.getPlayer(), event.getBlock());
 					}
 				}

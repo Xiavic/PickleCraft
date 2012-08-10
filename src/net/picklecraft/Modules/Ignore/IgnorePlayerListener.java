@@ -6,18 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 public class IgnorePlayerListener implements Listener {
 	IgnoreModule module;
 	public IgnorePlayerListener(IgnoreModule module) {
 		this.module = module;
 	}
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerChat (PlayerChatEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerChat (AsyncPlayerChatEvent event) {
 		Player[] players = event.getRecipients().toArray(new Player[0]);
 		for (int i = 0; i < players.length; i++) {
 			IgnorePlayer igPlayer = module.playerIgnoreList.get(players[i]);
@@ -44,5 +41,5 @@ public class IgnorePlayerListener implements Listener {
 		module.Save(event.getPlayer());
 		module.playerIgnoreList.remove(event.getPlayer());
 	}
-	
+
 }
