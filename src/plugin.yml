@@ -1,7 +1,7 @@
 name: PickleCraft
 main: net.picklecraft.PickleCraftPlugin
 author: Pickle
-version: 1.9.5
+version: 2.0
 description: Adds various usefull things.
 softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:

@@ -51,7 +51,7 @@ public class PWModule implements IModule, Listener {
                     //pwFile.mkdirs();
                     pwFile.createNewFile();
                 } catch (IOException ex) {
-                    Logger.getLogger(PWModule.class.getName()).log(Level.SEVERE, null, ex);
+                    PickleCraftPlugin.log.log(Level.SEVERE, null, ex);
                 }
             }
 	}
