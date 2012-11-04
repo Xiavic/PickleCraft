@@ -99,6 +99,9 @@ permissions:
  PickleCraft.signrank.build:
    description: Allows use of SignRank Sign Placement
    default: op
+ PickleCraft.signrank.use:
+   description: Promote with SignRank
+   default: true
  PickleCraft.counter.build:
    description: Allows use of Counter Sign Placement
    default: true

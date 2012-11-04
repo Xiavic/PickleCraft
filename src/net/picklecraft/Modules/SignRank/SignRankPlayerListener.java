@@ -37,15 +37,17 @@ public class SignRankPlayerListener implements Listener  {
 	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			BlockState blockstate = event.getClickedBlock().getState();
-			if (blockstate instanceof Sign) {
-				Sign sign = (Sign)blockstate;
-				String[] lines = sign.getLines();
-				if (lines[0].equalsIgnoreCase("SignRank")) {
-					if (!lines[1].isEmpty()) { module.promote(event.getPlayer(),lines[1]); }
-					else if (!lines[2].isEmpty()) { module.promote(event.getPlayer(),lines[2]); }
-					else if (!lines[3].isEmpty()) { module.promote(event.getPlayer(),lines[3]); }
+		if (PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.signrank.use")) {
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				BlockState blockstate = event.getClickedBlock().getState();
+				if (blockstate instanceof Sign) {
+					Sign sign = (Sign)blockstate;
+					String[] lines = sign.getLines();
+					if (lines[0].equalsIgnoreCase("SignRank")) {
+						if (!lines[1].isEmpty()) { module.promote(event.getPlayer(),lines[1]); }
+						else if (!lines[2].isEmpty()) { module.promote(event.getPlayer(),lines[2]); }
+						else if (!lines[3].isEmpty()) { module.promote(event.getPlayer(),lines[3]); }
+					}
 				}
 			}
 		}

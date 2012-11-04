@@ -33,7 +33,7 @@ public class Pony {
 		ChatColor.BLUE,
 		ChatColor.DARK_BLUE,
 		ChatColor.DARK_PURPLE,
-              	};
+        };
 	private static String[] ponies = {
 			ChatColor.WHITE+"Rarity is best pony!",
 			ChatColor.GOLD+"AppleJack is best pony!",
@@ -49,7 +49,8 @@ public class Pony {
 			rainbowizeString("SONIC RAINBOOM"),
 			rainbowizeString("ATOMIC RAINBOOM"),
 			rainbowizeString("RAINBOW FIRE TRAIL!"),
-                        rainbowizeString("MLP:FIM IS TEH BEST!")
+            rainbowizeString("MLP:FIM IS TEH BEST!"),
+			rainbowizeString("Pony Swag")
 			};
 	private static Random r = new Random();
 

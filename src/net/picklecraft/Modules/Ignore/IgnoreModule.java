@@ -29,14 +29,14 @@ import org.bukkit.entity.Player;
  *
  * @author Pickle
  *
+ * Currently broke..
  */
 public class IgnoreModule implements IModule {
-	public List<IgnorePlayer> playerIgnoreList = new List<IgnorePlayer>();
+	public List<IgnorePlayer> playerIgnoreList = new ArrayList<IgnorePlayer>();
 
 	private PickleCraftPlugin plugin;
 
 	private IgnorePlayerListener igPlayerListener;
-	private IgnoreWorldListener igWorldListener;
 
 	private File igFile;
 
@@ -69,7 +69,6 @@ public class IgnoreModule implements IModule {
 	@Override
 	public void onEnable() {
 		igPlayerListener = new IgnorePlayerListener(this);
-		igWorldListener = new IgnoreWorldListener(this);
 		plugin.getServer().getPluginManager().registerEvents(igPlayerListener,plugin);
 		plugin.getServer().getPluginManager().registerEvents(igWorldListener,plugin);
 		Load();

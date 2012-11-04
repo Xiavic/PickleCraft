@@ -2,16 +2,18 @@ PickleCraft is my personal plugin.
 Orginally created for Orcworm.co.uk, but has been slightly modified to be able to add "components"
 these components are generally single classes and are loadable from the config.
 
-As of right now it is dependent on bukkit which is to soon to be phased out with spout and mcAPI.
-
 Goal for now is begin writing an simple but easy to use api so porting shall be easy.
 
+This plugin is operated on several small private servers including my own: mc.picklecraft.net
+
 ChangeLog
+2.1 Added invisibitly nerf. Now acts like TF2 spy class. Various other fixes.
+2.0 Removed old properties, json only :3, and added signrank perm to click.
 1.9.5 Updated for 1.3, chat formater can strip "special" colors according to perms. Also compiled as Java 1.6.
 1.9 Added PrivateWarps and json (gson) parser to replace the old properties files...(soon to come)
 1.8.5 Added /tpaccept perm, optmize fixes, and chat format now exscapes %'s
 1.8.3 Added ChatFormater.
-1.8.2 Added automatic loadable internal components. 
+1.8.2 Added automatic loadable internal components.
 1.8 Refactored package name to reflect new domain :P
 1.7 Redone the module system.
 1.6.6 Logblock logs timber... added reload command.

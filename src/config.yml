@@ -34,7 +34,7 @@ teleportask:
       tphererequest: '&e%s&2 has sent a request to teleport to him.'
       tprequest: '&e%s&2 has sent a request to teleport to you.'
       tpdualaccept: '&e%s&2 has accepted.'
-      tpheredualrequest: '&e%s&2 has sent a  request for you to teleport to &e%.'
+      tpheredualrequest: '&e%s&2 has sent a  request for you to teleport to &e%s.'
       tpdualrequest: '&e%s&2 has sent a request for &e%s&2 to teleport to you.'
       showcommands: '&6/tpaccept&2 to accept | &6/tpdeny&2 to deny.'
       showreturncommand: '&6/tpareturn&2 to return to your last location.'
@@ -58,7 +58,7 @@ ignorecraft:
             removed: '&2Removed &e%s&2 from ignore list.'
             added: '&2Now ignoring &e%s.'
             ignored: '&e%s&2 is now ignoring you.'
-            allignore_on: '&2Now ignoring everyone..'
+            allignore_on: '&2Now ignoring everyone.'
             allignore_off: '&2No longer ignoring everyone.'
 counter:
     counterline: '~counter~'
@@ -68,6 +68,7 @@ counter:
             msg: '&2Place a sign with %s and power with redstone!'
 
 privatewarps:
+    ranks: 'admin:-1,mod:-1,vip:20,donator:10'
     messages:
         commandhelplist:
             header: '&2----PrivateWarps commands----'
@@ -75,6 +76,10 @@ privatewarps:
             nowarps: '&4You have no warps.'
             warpnoexist: '&4Warp %s doesn''t exist.'
             warpexist: '&4Warp %s already exists.'
+            overlimit: '&4You have already reached your warp limit. Use /pw remove %s to remove it.'
         info:
             warpset: '&2Warp set.'
             warpremove: '&2Warp Removed.'
+
+invisiblenerf:
+     maxcooldown: 400

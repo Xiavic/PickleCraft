@@ -43,8 +43,8 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 	public static final Logger log = Bukkit.getLogger();
 	public static ModuleManager moduleManager = null;
 	public static final Pattern colorPattern = Pattern.compile("&");
-        public static final Pattern colorStripPattern = Pattern.compile("&[0-9a-fk-rA-FK-R]");
-        public static final Pattern colorSpecialStripPattern = Pattern.compile("&[klmno]");
+    public static final Pattern colorStripPattern = Pattern.compile("&[0-9a-fk-rA-FK-R]");
+    public static final Pattern colorSpecialStripPattern = Pattern.compile("&[klmno]");
 
 	public static final Gson gson = new Gson();
 
@@ -114,19 +114,20 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
     }
 
 	public static boolean hasPerm(Player player, String perm) {
-            if (worldedit) {
-                return PermissionsResolverManager.getInstance().hasPermission(player, perm);
-            }
-            return player.hasPermission(perm);
+		if (worldedit) {
+			return PermissionsResolverManager.getInstance().hasPermission(player, perm);
+		}
+		return player.hasPermission(perm);
 	}
 
 	public static boolean hasWorldEdit() { return worldedit; }
 
 	public void reload() {
-            Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin!"));
-            Bukkit.getPluginManager().disablePlugin(this);
-            Bukkit.getPluginManager().enablePlugin(this);
-            moduleManager.reloadModules();
+		reloadConfig();
+		Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin!"));
+		Bukkit.getPluginManager().disablePlugin(this);
+		Bukkit.getPluginManager().enablePlugin(this);
+		moduleManager.reloadModules();
 	}
 
 	@Override
@@ -138,9 +139,9 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-            if (moduleManager == null) {
-                moduleManager = new ModuleManager(this);
-            }
+		if (moduleManager == null) {
+			moduleManager = new ModuleManager(this);
+		}
 		if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldEdit")){
 			PermissionsResolverManager.initialize(this); //wepif
 			PickleCraftPlugin.worldedit = true;
@@ -149,9 +150,8 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 		saveConfig();
 		reloadConfig();
 		/* set up new modules */
-                moduleManager.loadModules();
+        moduleManager.loadModules();
 		Bukkit.getPluginManager().registerEvents(this, this);
-
 	}
 
 	@Override

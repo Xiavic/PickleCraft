@@ -4,6 +4,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,9 +40,10 @@ import org.bukkit.event.world.WorldSaveEvent;
  */
 public class PWModule implements IModule, Listener {
 	public List<PWPlayer> players = new ArrayList<PWPlayer>();
+	public HashMap<String,Integer> maxLimitRanks = new HashMap<String,Integer>();
 
 	private PickleCraftPlugin plugin;
-        private File pwFile;
+    private File pwFile;
 
 	public PWModule(PickleCraftPlugin plugin) {
             this.plugin = plugin;
@@ -69,10 +71,21 @@ public class PWModule implements IModule, Listener {
             Save();
 	}
 
+	public HashMap<String,Integer> GetMaxLimitRanks() {
+		return maxLimitRanks;
+	}
 	@Override
 	public void onEnable() {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
             Load();
+			/**
+			 * Get rank "limit" values from config and parse them.
+			 */
+			ArrayList<String> ranks = (ArrayList<String>) plugin.getConfig().getStringList("privatewarps.ranks");
+			for (int i = 0; i < ranks.size(); i++) {
+				String[] tok = ranks.get(i).split(":");
+				maxLimitRanks.put(tok[0], Integer.getInteger(tok[1]));
+			}
 	}
 
 	@Override
@@ -145,7 +158,7 @@ public class PWModule implements IModule, Listener {
                     return p;
                 }
             }
-            PWPlayer p = new PWPlayer(player.getName());
+            PWPlayer p = new PWPlayer(this,player.getName());
             players.add(p);
             return p;
         }
@@ -272,7 +285,7 @@ public class PWModule implements IModule, Listener {
                     while (reader.hasNext()) {
                         String name = reader.nextName();
                         if (name.equalsIgnoreCase("player")) {
-                            player = new PWPlayer(reader.nextString());
+                            player = new PWPlayer(this,reader.nextString());
                         }
                         else if (name.equalsIgnoreCase("warps")) {
                             reader.beginArray();
