@@ -1,7 +1,5 @@
 package net.picklecraft.Modules.Ignore;
 
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +8,8 @@ import net.picklecraft.Modules.IModule;
 import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
+import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
 import org.bukkit.entity.Player;
 /**
  * Copyright (c) 2011-2012
