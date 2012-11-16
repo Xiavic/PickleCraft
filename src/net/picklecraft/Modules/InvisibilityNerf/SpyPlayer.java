@@ -1,6 +1,5 @@
 package net.picklecraft.Modules.InvisibilityNerf;
 
-import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

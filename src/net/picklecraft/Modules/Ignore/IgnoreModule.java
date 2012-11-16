@@ -70,7 +70,6 @@ public class IgnoreModule implements IModule {
 	public void onEnable() {
 		igPlayerListener = new IgnorePlayerListener(this);
 		plugin.getServer().getPluginManager().registerEvents(igPlayerListener,plugin);
-		plugin.getServer().getPluginManager().registerEvents(igWorldListener,plugin);
 		Load();
 	}
 
@@ -326,31 +325,33 @@ public class IgnoreModule implements IModule {
 			while(reader.hasNext()) {
 				reader.beginObject();
 				while (reader.hasNext()) {
-				String name = reader.nextName();
-				if (name.equalsIgnoreCase("player")) {
-					player = new IgnorePlayer(this,plugin.getServer().getPlayer(reader.nextString()));
-				}
-				else if (name.equalsIgnoreCase("ignoreall")) {
-					if (reader.nextBoolean()) {
-						player.toggleAllIgnore();
+					String name = reader.nextName();
+					if (name.equalsIgnoreCase("player")) {
+						player = new IgnorePlayer(this,plugin.getServer().getPlayer(reader.nextString()));
 					}
-				}
-				else if (name.equalsIgnoreCase("ignores")) {
-					reader.beginArray();
-					while (reader.hasNext()) {
-						String n = reader.nextName();
-						if (n.equalsIgnoreCase("name")) {
-							Player pl = plugin.getServer().getPlayer(reader.nextString());
-							if (pl != null) {
-								player.ignorePlayer(pl);
-							}
+					else if (name.equalsIgnoreCase("ignoreall")) {
+						if (reader.nextBoolean()) {
+							player.toggleAllIgnore();
 						}
 					}
-					reader.endArray();
-				}
-		   }
-		   reader.endObject();
-		   playerIgnoreList.add(player);
+					else if (name.equalsIgnoreCase("ignores")) {
+						reader.beginArray();
+						while (reader.hasNext()) {
+							reader.beginObject();
+							String n = reader.nextName();
+							if (n.equalsIgnoreCase("name")) {
+								Player pl = plugin.getServer().getPlayer(reader.nextString());
+								if (pl != null) {
+									player.ignorePlayer(pl);
+								}
+							}
+							reader.endObject();
+						}
+						reader.endArray();
+					}
+			}
+			reader.endObject();
+			playerIgnoreList.add(player);
 	       }
 	       reader.endArray();
             } catch (EOFException e) {

@@ -31,6 +31,7 @@ public class PWPlayer {
 	private PWModule module;
     private String name;
     private List<Warp> warps = new ArrayList<Warp>();
+	private int limit = -2; //-2 respresents we haven't updated yet.
     public PWPlayer(PWModule module, String name) {
 		this.module = module;
         this.name = name;
@@ -74,18 +75,24 @@ public class PWPlayer {
 
 
 	public int GetMaxLimit() {
-		PermissionsResolverManager p = PermissionsResolverManager.getInstance();
-		String[] groups = p.getGroups(this.name); // get all groups the play is in
-		for (int g = 0; g < groups.length; g++) {
-			HashMap<String,Integer> m = module.GetMaxLimitRanks(); // get the rank keys.
-			String[] keys = (String[]) m.keySet().toArray();
-			for (int k = 0; k < keys.length; k++) {
-				if (keys[k].equalsIgnoreCase(groups[g])) {
-					return m.get(keys[k]); //if key is the same as a group the player is in, then return the value.
+		if (limit == -2) { // if limit is -2, then grab a new limit
+			limit = -1;
+			PermissionsResolverManager p = PermissionsResolverManager.getInstance();
+			String[] groups = p.getGroups(this.name); // get all groups the play is in
+			for (int g = 0; g < groups.length; g++) {
+				HashMap<String,Integer> m = module.GetMaxLimitRanks(); // get the rank keys.
+				for (String key : m.keySet()) {
+					if (key.equalsIgnoreCase(groups[g])) {
+						int l = m.get(key);
+						//get the highest limit from all groups.
+						if (l > limit) { //if key is the same as a group the player is in, then compare if it is higher.
+							limit = l;
+						}
+					}
 				}
 			}
+			//return -1 so all nonconfig ranks are unlimited.
 		}
-		//return -1 so all nonconfig ranks are unlimited.
-		return -1;
+		return limit;
 	}
 }

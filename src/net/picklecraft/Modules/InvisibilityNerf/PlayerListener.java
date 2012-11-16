@@ -1,19 +1,10 @@
 package net.picklecraft.Modules.InvisibilityNerf;
 
-import java.util.Collection;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.event.player.*;
 
 /**
  *
@@ -43,8 +34,8 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onItemHeld(PlayerItemHeldEvent event) {
 		SpyPlayer spy = module.getPlayer(event.getPlayer());
-		if (event.getPlayer().getItemInHand().getType() == Material.WATCH) {
-			if (spy == null) { //player isn't listedSpyPlayer spy = module.getPlayer(event.getPlayer());
+		if (event.getPlayer().getInventory().getItem(event.getNewSlot()).getType() == Material.WATCH) {
+			if (spy == null) { //player isn't listed
 				spy = module.addPlayer(event.getPlayer());
 			}
 			spy.setInvisible(true);
@@ -57,11 +48,25 @@ public class PlayerListener implements Listener {
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerClick(PlayerInteractEvent event) {
+		//if player joins with invis effect, prevent them from being invis.
+		if (SpyPlayer.hasInvisEffect(event.getPlayer())) {
+			SpyPlayer spy = module.getPlayer(event.getPlayer());
+			if (spy == null) { //player isn't listed
+				spy = module.addPlayer(event.getPlayer());
+			}
+			spy.setInvisible(true);
+		}
+	}
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		//if player joins with invis effect, prevent them from being invis.
 		if (SpyPlayer.hasInvisEffect(event.getPlayer())) {
-			SpyPlayer spy = module.addPlayer(event.getPlayer());
-			spy.setInvisible(false);
+			SpyPlayer spy = module.getPlayer(event.getPlayer());
+			if (spy == null) { //player isn't listed
+				spy = module.addPlayer(event.getPlayer());
+			}
+			spy.setInvisible(true);
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)

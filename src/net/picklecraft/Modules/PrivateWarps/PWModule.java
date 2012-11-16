@@ -116,39 +116,39 @@ public class PWModule implements IModule, Listener {
 		 * ignore command.
 		 */
 		if (command.getName().equalsIgnoreCase("pw")){
-                    if (player != null) {
-                            if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
-                                if (args.length >= 1) {
-                                    if (args.length >= 2) {
-                                        if (args[0].equalsIgnoreCase("set")) {
-                                            setWarp(player,args[1]);
-                                        }
-                                        else if (args[0].equalsIgnoreCase("remove")) {
-                                            removeWarp(player,args[1]);
-                                        }
-                                    }
-                                    else if (args[0].equalsIgnoreCase("list")) {
-                                        listWarps(player);
-                                    }
-                                    else {
-                                        teleportToWarp(player,args[0]);
-                                    }
-                                    return true;
-                                }
-                                return false;
-                            }
-                            else {
-                                player.sendMessage(
-                                    plugin.getStringFromConfig("common.messages.errors.donthaveperm")
-                                    );
-                                return true;
-                            }
+			if (player != null) {
+				if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
+					if (args.length >= 1) {
+						if (args.length >= 2) {
+							if (args[0].equalsIgnoreCase("set")) {
+								setWarp(player,args[1]);
+							}
+							else if (args[0].equalsIgnoreCase("remove")) {
+								removeWarp(player,args[1]);
+							}
+						}
+						else if (args[0].equalsIgnoreCase("list")) {
+							listWarps(player);
+						}
+						else {
+							teleportToWarp(player,args[0]);
+						}
+						return true;
+					}
+					return false;
+				}
+				else {
+					player.sendMessage(
+						plugin.getStringFromConfig("common.messages.errors.donthaveperm")
+						);
+					return true;
+				}
 			}
 			else {
-                            sender.sendMessage("This is a player only command.");
-                            return true;
+				sender.sendMessage("This is a player only command.");
+				return true;
 			}
-                }
+		}
 		return false;
 	}
 
@@ -217,14 +217,14 @@ public class PWModule implements IModule, Listener {
             }
             else {
                 StringBuilder s = new StringBuilder();
-                s.append("&2Warps: ");
+                s.append("&2Warps: &e");
                 for (int i = 0; i < warps.size(); i++) {
-                    s.append("&e");
                     s.append(warps.get(i).getName());
-                    s.append(",");
+                    s.append(", ");
                     if (i % 8 == 0 && i != 0 ) {
                         player.sendMessage(PickleCraftPlugin.Colorize(s.toString()));
                         s = new StringBuilder();
+						s.append("&e");
                     }
                 }
                 String d = s.toString();
@@ -253,9 +253,9 @@ public class PWModule implements IModule, Listener {
                              writer.name("name").value(w.getName());
                              writer.name("location");
                              writer.beginObject();
-                             writer.name("x").value((int)w.getLocation().getX());
-                             writer.name("y").value((int)w.getLocation().getY());
-                             writer.name("z").value((int)w.getLocation().getZ());
+                             writer.name("x").value(w.getLocation().getX());
+                             writer.name("y").value(w.getLocation().getY());
+                             writer.name("z").value(w.getLocation().getZ());
                              writer.name("world").value(w.getLocation().getWorld().getName());
                              writer.endObject();
                              writer.endObject();
