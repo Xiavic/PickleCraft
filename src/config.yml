@@ -69,15 +69,19 @@ counter:
             msg: '&2Place a sign with %s and power with redstone!'
 
 privatewarps:
-    ranks: 'admin:-1,mod:-1,vip:20,donator:10'
+    ranks:
+    - admin=-1
+    - mod=-1
+    - vip=3
+    - donator=5
     messages:
         commandhelplist:
             header: '&2----PrivateWarps commands----'
         errors:
             nowarps: '&4You have no warps.'
             warpnoexist: '&4Warp %s doesn''t exist.'
-            warpexist: '&4Warp %s already exists.'
-            overlimit: '&4You have already reached your warp limit. Use /pw remove %s to remove it.'
+            warpexist: '&4Warp %s already exists. Use /pw remove %s to remove it.'
+            overlimit: '&4You have already reached your warp limit.'
         info:
             warpset: '&2Warp set.'
             warpremove: '&2Warp Removed.'

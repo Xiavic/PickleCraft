@@ -82,8 +82,8 @@ public class PWModule implements IModule, Listener {
 			 */
 			ArrayList<String> ranks = (ArrayList<String>) plugin.getConfig().getStringList("privatewarps.ranks");
 			for (int i = 0; i < ranks.size(); i++) {
-				String[] tok = ranks.get(i).split(":");
-				maxLimitRanks.put(tok[0], Integer.getInteger(tok[1]));
+				String[] tok = ranks.get(i).split("=");
+				maxLimitRanks.put(tok[0].toLowerCase(), Integer.parseInt(tok[1]));
 			}
 	}
 
@@ -165,15 +165,21 @@ public class PWModule implements IModule, Listener {
         private void setWarp(Player player, String name) {
             if (name != null) {
                 PWPlayer p = getWarpPlayer(player);
-                if (p.setWarp(name, player.getLocation())) {
+				int warpFail = p.setWarp(name, player.getLocation(),false);
+                if (warpFail == 1) {
                     player.sendMessage(
                         plugin.getStringFromConfig("privatewarps.messages.info.warpset")
                         );
                 }
-                else {
-                    player.sendMessage(
-                        plugin.getStringFromConfig("privatewarps.messages.errors.warpexist",name)
+				else if (warpFail == 0) {
+					player.sendMessage(
+                        plugin.getStringFromConfig("privatewarps.messages.errors.warpexist",name,name)
                         );
+				}
+				else if (warpFail == -1) {
+					player.sendMessage(
+							plugin.getStringFromConfig("privatewarps.messages.errors.overlimit")
+							);
                 }
             }
         }
@@ -216,7 +222,24 @@ public class PWModule implements IModule, Listener {
             }
             else {
                 StringBuilder s = new StringBuilder();
-                s.append("&2Warps: &e");
+				int limit = p.GetMaxLimit();
+                s.append("&2Warps (");
+				//format current amount to show the player he reaches his limit
+				int si = limit - warps.size();
+				if (limit != -1) {
+					if (si < 2) {
+						s.append("&4"); //red color
+					}
+					else if (si <= 5) {
+						s.append("&6"); //gold color
+					}
+				}
+				s.append(warps.size());
+				if (limit != -1) {
+					s.append("&2 out of ");
+					s.append(limit);
+				}
+				s.append("): &e");
                 for (int i = 0; i < warps.size(); i++) {
                     s.append(warps.get(i).getName());
                     s.append(", ");
@@ -302,13 +325,13 @@ public class PWModule implements IModule, Listener {
                                         while (reader.hasNext()) {
                                             String a = reader.nextName();
                                             if (a.equalsIgnoreCase("x")) {
-                                            loc.setX(reader.nextInt());
+												loc.setX(reader.nextDouble());
                                             }
                                             else if (a.equalsIgnoreCase("y")) {
-                                            loc.setY(reader.nextInt());
+												loc.setY(reader.nextDouble());
                                             }
                                             else if (a.equalsIgnoreCase("z")) {
-                                            loc.setZ(reader.nextInt());
+												loc.setZ(reader.nextDouble());
                                             }
                                             else if (a.equalsIgnoreCase("world")) {
                                                 World w = plugin.getServer().getWorld(reader.nextString());
@@ -320,7 +343,7 @@ public class PWModule implements IModule, Listener {
                                 }
                                 reader.endObject();
                                 if (!warpname.isEmpty()) {
-                                    player.setWarp(warpname, loc);
+                                    player.setWarp(warpname, loc, true);
                                 }
                             }
 
@@ -342,7 +365,7 @@ public class PWModule implements IModule, Listener {
 	}
 
 
-        @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW)
 	public void onWorldSave(WorldSaveEvent event) {
             //save json when the world does.
             Save();

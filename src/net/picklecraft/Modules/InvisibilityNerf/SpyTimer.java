@@ -23,10 +23,11 @@ public class SpyTimer implements Runnable {
 	private InvisibilityNerfModule module;
 	private int tick = 20;
 
-	public SpyTimer(InvisibilityNerfModule module, int tick) {
+	public SpyTimer(InvisibilityNerfModule module) {
 		this.module = module;
-		this.tick = tick;
 	}
+
+	public int getTick() { return tick; }
 
 	@Override
 	public void run() {
@@ -38,11 +39,20 @@ public class SpyTimer implements Runnable {
 			}
 			else {
 				spy.setDuration(spy.getDuration() - tick);
+				//send player warning messages
+				int warn = tick*10;
+				if (spy.getDuration() < warn && spy.getDuration() > warn) {
+					spy.getPlayer().sendMessage("Spy time is almost over!");
+				}
+
 				if (spy.getInvisible()) {
-					spy.setCoolDown(spy.getCoolDown() - tick);
+					spy.setCoolDown(spy.getCoolDown() - tick); //decrease a tick
 				}
 				else {
-					spy.setCoolDown(spy.getCoolDown() + tick);
+					spy.setCoolDown(spy.getCoolDown() + tick); //increase a tick
+				}
+				if (spy.getCoolDown() <= 0) { //cooldown is below 0, no more invisible
+					spy.setInvisible(false);
 				}
 			}
 		}

@@ -14,11 +14,11 @@ import org.bukkit.entity.Player;
 
 public class CounterModule implements IModule, Runnable {
 	private PickleCraftPlugin plugin;
-	
+
 	private BlockListener blockListener;
-	
+
 	private List<CounterSign> signs;
-	
+
 	public CounterModule(PickleCraftPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -28,7 +28,7 @@ public class CounterModule implements IModule, Runnable {
 		signs.clear();
 		signs = null;
 	}
-	
+
 	@Override
 	public void onEnable() {
 		blockListener = new BlockListener(this);
@@ -36,12 +36,12 @@ public class CounterModule implements IModule, Runnable {
 		signs = new ArrayList<CounterSign>();
 		Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, this, 1000, 1000);
 	}
-	
+
 	@Override
 	public PickleCraftPlugin getPlugin() {
 		return plugin;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Counter";
@@ -50,7 +50,7 @@ public class CounterModule implements IModule, Runnable {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		return false;
 	}
-	
+
 	@Override
 	public void sendCommandList(CommandSender sender) {
 		Player player = null;
@@ -69,7 +69,7 @@ public class CounterModule implements IModule, Runnable {
 		     }
 		}
 	}
-	
+
 	public boolean isCounterSign(Sign sign) {
 		return sign.getLine(0).equalsIgnoreCase(plugin.getStringFromConfig("counter.counterline",""));
 	}
@@ -91,7 +91,7 @@ public class CounterModule implements IModule, Runnable {
 	}
 	@Override
 	public void run() {
-		//Update our sign cache. 
+		//Update our sign cache.
 		for (int i = 0; i < signs.size(); i++) {
 			if (signs.get(i).isExpired()) {
 				signs.remove(i);

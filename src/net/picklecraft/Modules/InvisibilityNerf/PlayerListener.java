@@ -4,7 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 /**
  *
@@ -32,13 +36,36 @@ public class PlayerListener implements Listener {
 		this.module = module;
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
+	public void onDropItem(PlayerDropItemEvent event) {
+		//if player is holding a watch and drops it....turn invis off.
+		if (event.getPlayer().getItemInHand().getType() == Material.WATCH) {
+			ItemStack item = event.getItemDrop().getItemStack();
+			if (item != null) {
+				if (item.getType() == Material.WATCH) {
+					SpyPlayer spy = module.getPlayer(event.getPlayer());
+					if (spy != null) { //player isn't listed
+						spy.setInvisible(false);
+					}
+				}
+			}
+		}
+	}
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onItemHeld(PlayerItemHeldEvent event) {
 		SpyPlayer spy = module.getPlayer(event.getPlayer());
-		if (event.getPlayer().getInventory().getItem(event.getNewSlot()).getType() == Material.WATCH) {
-			if (spy == null) { //player isn't listed
-				spy = module.addPlayer(event.getPlayer());
+		ItemStack item = event.getPlayer().getInventory().getItem(event.getNewSlot());
+		if (item != null) {
+			if (item.getType() == Material.WATCH) {
+				if (spy != null) { //player isn't listed
+					spy.setInvisible(true);
+				}
 			}
-			spy.setInvisible(true);
+			else {
+				//if players switches item then turn invis off.
+				if (spy != null) {
+					spy.setInvisible(false);
+				}
+			}
 		}
 		else {
 			//if players switches item then turn invis off.
@@ -49,13 +76,22 @@ public class PlayerListener implements Listener {
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerClick(PlayerInteractEvent event) {
-		//if player joins with invis effect, prevent them from being invis.
-		if (SpyPlayer.hasInvisEffect(event.getPlayer())) {
-			SpyPlayer spy = module.getPlayer(event.getPlayer());
-			if (spy == null) { //player isn't listed
-				spy = module.addPlayer(event.getPlayer());
+		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (!event.isCancelled() && event.getMaterial() == Material.POTION) {
+				Potion p = Potion.fromItemStack(event.getItem());
+				if (p.getType() == PotionType.INVISIBILITY) {
+					SpyPlayer spy = module.getPlayer(event.getPlayer());
+					if (spy == null) { //player isn't listed
+						//So doo all this stuff
+						spy = module.addPlayer(event.getPlayer());
+						spy.setInvisible(false);
+						event.getItem().setAmount(event.getItem().getAmount()-1);
+						//event.getPlayer().sendMessage("Heavy is Spy!");
+					}
+					//cancel the event so not to waste player's potion when under effect
+					event.setCancelled(true);
+				}
 			}
-			spy.setInvisible(true);
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -66,7 +102,7 @@ public class PlayerListener implements Listener {
 			if (spy == null) { //player isn't listed
 				spy = module.addPlayer(event.getPlayer());
 			}
-			spy.setInvisible(true);
+			spy.setInvisible(false);
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)

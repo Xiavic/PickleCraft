@@ -31,7 +31,7 @@ public class PWPlayer {
 	private PWModule module;
     private String name;
     private List<Warp> warps = new ArrayList<Warp>();
-	private int limit = -2; //-2 respresents we haven't updated yet.
+	private int limit = -1; //-1 respresents unlimited.
     public PWPlayer(PWModule module, String name) {
 		this.module = module;
         this.name = name;
@@ -58,41 +58,50 @@ public class PWPlayer {
         }
         return false;
     }
-    public boolean setWarp(String name, Location location) {
-		int maxLimit = GetMaxLimit();
-		if (warps.size() > maxLimit || maxLimit == -1) {
+    public int setWarp(String name, Location location, boolean ignoreLimit) {
+		//return 1 for success
+		//0 for existing warp fail
+		//-1 for limit reach
+		int maxLimit = ignoreLimit ? -1 : GetMaxLimit(); //allows users to use warps already exist if config change
+		//also is a loophole hack fix for getmaxlimit null when json is loaded.
+		if (warps.size() < maxLimit || maxLimit == -1) {
 			//if limit is greater than limit, deny adding.
 			//if limit is "-1" then no limit applied.
 			if (getWarp(name) == null) {
 				Warp warp = new Warp(name,location);
 				warps.add(warp);
-				return true;
+				return 1;
 			}
-			module.getPlugin().getStringFromConfig("privatewarps.messages.errors.overlimit", name);
+			else {
+				return 0;
+			}
 		}
-        return false;
+		else {
+			return -1;
+		}
     }
 
 
 	public int GetMaxLimit() {
-		if (limit == -2) { // if limit is -2, then grab a new limit
-			limit = -1;
-			PermissionsResolverManager p = PermissionsResolverManager.getInstance();
-			String[] groups = p.getGroups(this.name); // get all groups the play is in
-			for (int g = 0; g < groups.length; g++) {
-				HashMap<String,Integer> m = module.GetMaxLimitRanks(); // get the rank keys.
-				for (String key : m.keySet()) {
-					if (key.equalsIgnoreCase(groups[g])) {
-						int l = m.get(key);
-						//get the highest limit from all groups.
-						if (l > limit) { //if key is the same as a group the player is in, then compare if it is higher.
-							limit = l;
-						}
-					}
+		limit = -1;
+		PermissionsResolverManager p = PermissionsResolverManager.getInstance();
+		String[] groups = p.getGroups(this.name); // get all groups the player is in
+		HashMap<String,Integer> m = module.GetMaxLimitRanks(); // get the rank keys.
+		for (int g = 0; g < groups.length; g++) {
+			String lowerG = groups[g].toLowerCase(); // lowercase to match anything ;3
+			if (m.containsKey(lowerG)) {
+				Integer li = m.get(lowerG);
+				if (li == -1) { //if we find group with -1, don't bother with the rest.
+					limit = li;
+					return limit;
+				}
+				//get the highest limit from all groups.
+				if (li > limit) { //if key is the same as a group the player is in, then compare if it is higher.
+					limit = li;
 				}
 			}
-			//return -1 so all nonconfig ranks are unlimited.
 		}
+		//return -1 so all nonconfig ranks are unlimited.
 		return limit;
 	}
 }

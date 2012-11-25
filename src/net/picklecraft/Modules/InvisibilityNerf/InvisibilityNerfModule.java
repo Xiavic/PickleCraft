@@ -1,13 +1,8 @@
 package net.picklecraft.Modules.InvisibilityNerf;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import net.picklecraft.Modules.IModule;
-import net.picklecraft.Modules.PrivateWarps.PWPlayer;
 import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,6 +35,7 @@ public class InvisibilityNerfModule implements IModule, Listener {
 	private int maxCoolDown = 20;
 	private List<SpyPlayer> players = new ArrayList<SpyPlayer>();
 	private PlayerListener playerListener;
+	private SpyTimer spyTimer;
 
 	public InvisibilityNerfModule(PickleCraftPlugin plugin) {
 		this.plugin = plugin;
@@ -63,6 +59,8 @@ public class InvisibilityNerfModule implements IModule, Listener {
 		playerListener = new PlayerListener(this);
 		plugin.getServer().getPluginManager().registerEvents(playerListener, plugin);
 		maxCoolDown = plugin.getConfig().getInt("invisiblenerf.maxcooldown");
+		spyTimer = new SpyTimer(this);
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, spyTimer, spyTimer.getTick(), spyTimer.getTick());
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class InvisibilityNerfModule implements IModule, Listener {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
-                String label, String[] args) {
+        String label, String[] args) {
 
 		return false;
 	}
@@ -95,7 +93,7 @@ public class InvisibilityNerfModule implements IModule, Listener {
 		return null;
 	}
 	public SpyPlayer addPlayer(Player player) {
-		PotionEffect effect = new PotionEffect(PotionEffectType.INVISIBILITY,1200,20);
+		PotionEffect effect = new PotionEffect(PotionEffectType.INVISIBILITY,400,20);
 		//set a default effect, look into grabing existing effect :3
 		SpyPlayer spy = new SpyPlayer(player,effect,maxCoolDown);
 		players.add(spy);

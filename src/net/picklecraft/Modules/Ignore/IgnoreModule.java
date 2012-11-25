@@ -45,7 +45,6 @@ public class IgnoreModule implements IModule {
 	    igFile = new File(plugin.getDataFolder() +"/ignores.json");
             if (!igFile.exists()) {
                 try {
-                    //pwFile.mkdirs();
                     igFile.createNewFile();
                 } catch (IOException ex) {
                     PickleCraftPlugin.log.log(Level.SEVERE, null, ex);
@@ -83,8 +82,8 @@ public class IgnoreModule implements IModule {
 			Command c = plugin.getCommand("ignore");
 		     if (PickleCraftPlugin.hasPerm(player, c.getPermission())) {
 				player.sendMessage(
-                                    plugin.getStringFromConfig("ignorecraft.messages.commandhelplist.header")
-                                    );
+					plugin.getStringFromConfig("ignorecraft.messages.commandhelplist.header")
+					);
 				player.sendMessage(c.getUsage() +" "+ c.getDescription());
 				c = plugin.getCommand("ignoreall");
 				player.sendMessage(c.getUsage() +" "+ c.getDescription());
@@ -222,19 +221,7 @@ public class IgnoreModule implements IModule {
 			if (player != null) {
 				IgnorePlayer igP = getIgnorePlayer(player);
 				if (igP != null) {
-				    if (igP.getIgnoreList().isEmpty()) {
-					player.sendMessage(
-					plugin.getStringFromConfig("ignorecraft.messages.errors.noignores")
-					);
-					}
-				    else {
 					listIgnores(igP);
-				    }
-				}
-				else {
-				    player.sendMessage(
-					plugin.getStringFromConfig("ignorecraft.messages.errors.noignores")
-					);
 				}
 			}
 			else {
@@ -247,44 +234,44 @@ public class IgnoreModule implements IModule {
 
 	public IgnorePlayer getIgnorePlayer(Player player) {
 	    for (IgnorePlayer igp : playerIgnoreList) {
-		if (igp.getPlayer() == player) {
-		    return igp;
-		}
+			if (igp.getPlayer() == player) {
+				return igp;
+			}
 	    }
 	    return null;
 	}
 
 	public void listIgnores(IgnorePlayer player) {
 	    if (player.isAllIgnored()) {
-		player.getPlayer().sendMessage(
-		    plugin.getStringFromConfig("ignorecraft.messages.info.ignoreall")
-		    );
+			player.getPlayer().sendMessage(
+				plugin.getStringFromConfig("ignorecraft.messages.info.ignoreall")
+				);
 	    }
 	    else {
-		ArrayList<Player> ignores = (ArrayList<Player>)  player.getIgnoreList();
-		if (ignores.size() <= 0) {
-		    player.getPlayer().sendMessage(
-			plugin.getStringFromConfig("ignorecraft.messages.errors.noignores")
-			);
-		}
-		else {
-		    StringBuilder s = new StringBuilder();
-		    s.append("&2Ignoring: ");
-		    for (int i = 0; i < ignores.size(); i++) {
-			s.append("&e");
-			s.append(ignores.get(i).getName());
-			s.append(",");
-			if (i % 8 == 0 && i != 0 ) {
-			    player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(s.toString()));
-			    s = new StringBuilder();
+			ArrayList<Player> ignores = (ArrayList<Player>)  player.getIgnoreList();
+			if (ignores.size() <= 0) {
+				player.getPlayer().sendMessage(
+				plugin.getStringFromConfig("ignorecraft.messages.errors.noignores")
+				);
 			}
-		    }
-		    String d = s.toString();
-		    if (!d.isEmpty()) {
-			//incase not enough indexs to fire the sendmessage in le loop :c
-			player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(d));
-		    }
-		}
+			else {
+				StringBuilder s = new StringBuilder();
+				s.append("&2Ignoring: ");
+				for (int i = 0; i < ignores.size(); i++) {
+				s.append("&e");
+				s.append(ignores.get(i).getName());
+				s.append(", ");
+				if (i % 8 == 0 && i != 0 ) {
+					player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(s.toString()));
+					s = new StringBuilder();
+				}
+				}
+				String d = s.toString();
+				if (!d.isEmpty()) {
+				//incase not enough indexs to fire the sendmessage in le loop :c
+				player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(d));
+				}
+			}
 	    }
 	}
 
@@ -349,11 +336,11 @@ public class IgnoreModule implements IModule {
 						}
 						reader.endArray();
 					}
-			}
-			reader.endObject();
-			playerIgnoreList.add(player);
-	       }
-	       reader.endArray();
+				}
+				reader.endObject();
+				playerIgnoreList.add(player);
+	        }
+	        reader.endArray();
             } catch (EOFException e) {
                 //Ignore.
             } catch (IOException e) {
