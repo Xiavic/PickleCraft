@@ -34,6 +34,9 @@ public class SpyTimer implements Runnable {
 		for (int i=0; i < module.getPlayers().size(); i++) {
 			SpyPlayer spy = module.getPlayers().get(i);
 			if (spy.getDuration() <= 0) {
+				spy.getPlayer().sendMessage(
+					module.getPlugin().getStringFromConfig("invisiblenerf.messages.wearoff")
+					);
 				spy.setInvisible(false);
 				module.getPlayers().remove(i);
 			}
@@ -42,7 +45,9 @@ public class SpyTimer implements Runnable {
 				//send player warning messages
 				int warn = tick*10;
 				if (spy.getDuration() < warn && spy.getDuration() > warn) {
-					spy.getPlayer().sendMessage("Spy time is almost over!");
+					spy.getPlayer().sendMessage(
+							module.getPlugin().getStringFromConfig("invisiblenerf.messages.wearoffwarn")
+							);
 				}
 
 				if (spy.getInvisible()) {

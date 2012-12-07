@@ -1,5 +1,6 @@
 package net.picklecraft.Modules.InvisibilityNerf;
 
+import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,7 +57,14 @@ public class PlayerListener implements Listener {
 		ItemStack item = event.getPlayer().getInventory().getItem(event.getNewSlot());
 		if (item != null) {
 			if (item.getType() == Material.WATCH) {
-				if (spy != null) { //player isn't listed
+				if (spy != null) {
+					spy.setInvisible(true);
+				}
+				//If player is admin, make him vanish
+				//Player doesn't need a potion
+				else if (PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.invisiblity.admin")) {
+					//Make potion last virtually forever
+					spy = module.addPlayer(event.getPlayer(),Integer.MAX_VALUE,Integer.MAX_VALUE);
 					spy.setInvisible(true);
 				}
 			}
@@ -86,6 +94,9 @@ public class PlayerListener implements Listener {
 						spy = module.addPlayer(event.getPlayer());
 						spy.setInvisible(false);
 						event.getItem().setAmount(event.getItem().getAmount()-1);
+						spy.getPlayer().sendMessage(
+							module.getPlugin().getStringFromConfig("invisiblenerf.messages.info")
+							);
 						//event.getPlayer().sendMessage("Heavy is Spy!");
 					}
 					//cancel the event so not to waste player's potion when under effect

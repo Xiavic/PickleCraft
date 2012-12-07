@@ -92,11 +92,15 @@ public class InvisibilityNerfModule implements IModule, Listener {
 		}
 		return null;
 	}
-	public SpyPlayer addPlayer(Player player) {
-		PotionEffect effect = new PotionEffect(PotionEffectType.INVISIBILITY,400,20);
+	public SpyPlayer addPlayer(Player player, int duration, int cooldown) {
+		PotionEffect effect = new PotionEffect(PotionEffectType.INVISIBILITY,duration,20);
 		//set a default effect, look into grabing existing effect :3
-		SpyPlayer spy = new SpyPlayer(player,effect,maxCoolDown);
+		SpyPlayer spy = new SpyPlayer(player,effect,cooldown);
 		players.add(spy);
 		return spy;
+	}
+	public SpyPlayer addPlayer(Player player) {
+		//generic add player
+		return addPlayer(player,400,maxCoolDown);
 	}
 }

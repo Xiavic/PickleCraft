@@ -88,3 +88,7 @@ privatewarps:
 
 invisiblenerf:
      maxcooldown: 400
+     messages:
+       wearoff: '&2You are no longer invisible.'
+       wearoffwarn: '&2Invisiblity is beginning to wear off.'
+       info: '&2Hold a golden watch to become invisible'

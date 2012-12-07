@@ -118,7 +118,7 @@ public class IgnoreModule implements IModule {
 									if ((Boolean)playerAndbool[1] == false) {
 										IgnorePlayer igP = getIgnorePlayer(player);
 										if (igP != null) {
-											igP.unignorePlayer(p);
+											igP.unignorePlayer(p.getName(),true);
 										}
 										else {
 											player.sendMessage(
@@ -150,11 +150,11 @@ public class IgnoreModule implements IModule {
 								if ((Boolean)playerAndbool[1] == false) {
 									IgnorePlayer igP = getIgnorePlayer(player);
 									if (igP != null) {
-										igP.ignorePlayer(p);
+										igP.ignorePlayer(p.getName(),true);
 									}
 									else {
-										igP = new IgnorePlayer(this,player);
-										igP.ignorePlayer(p);
+										igP = new IgnorePlayer(this,player.getName());
+										igP.ignorePlayer(p.getName(),true);
 										playerIgnoreList.add(igP);
 									}
 								}
@@ -195,11 +195,11 @@ public class IgnoreModule implements IModule {
 				if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
 					IgnorePlayer igP = getIgnorePlayer(player);
 					if (igP != null) {
-						igP.toggleAllIgnore();
+						igP.toggleAllIgnore(true);
 					}
 					else {
-						igP = new IgnorePlayer(this,player);
-						igP.toggleAllIgnore();
+						igP = new IgnorePlayer(this,player.getName());
+						igP.toggleAllIgnore(true);
 						playerIgnoreList.add(igP);
 					}
 				}
@@ -248,7 +248,7 @@ public class IgnoreModule implements IModule {
 				);
 	    }
 	    else {
-			ArrayList<Player> ignores = (ArrayList<Player>)  player.getIgnoreList();
+			ArrayList<String> ignores = (ArrayList<String>)  player.getIgnoreList();
 			if (ignores.size() <= 0) {
 				player.getPlayer().sendMessage(
 				plugin.getStringFromConfig("ignorecraft.messages.errors.noignores")
@@ -258,18 +258,18 @@ public class IgnoreModule implements IModule {
 				StringBuilder s = new StringBuilder();
 				s.append("&2Ignoring: ");
 				for (int i = 0; i < ignores.size(); i++) {
-				s.append("&e");
-				s.append(ignores.get(i).getName());
-				s.append(", ");
-				if (i % 8 == 0 && i != 0 ) {
-					player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(s.toString()));
-					s = new StringBuilder();
-				}
+					s.append("&e");
+					s.append(ignores.get(i));
+					s.append(", ");
+					if (i % 8 == 0 && i != 0 ) {
+						player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(s.toString()));
+						s = new StringBuilder();
+					}
 				}
 				String d = s.toString();
 				if (!d.isEmpty()) {
-				//incase not enough indexs to fire the sendmessage in le loop :c
-				player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(d));
+					//incase not enough indexs to fire the sendmessage in le loop :c
+					player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(d));
 				}
 			}
 	    }
@@ -286,9 +286,9 @@ public class IgnoreModule implements IModule {
 						 writer.name("ignoreall").value(player.isAllIgnored());
                          writer.name("ignores");
                          writer.beginArray();
-                         for (Player p : player.getIgnoreList()) {
+                         for (String p : player.getIgnoreList()) {
                              writer.beginObject();
-                             writer.name("name").value(p.getName());
+                             writer.name("name").value(p);
                              writer.endObject();
                          }
                          writer.endArray();
@@ -314,11 +314,11 @@ public class IgnoreModule implements IModule {
 				while (reader.hasNext()) {
 					String name = reader.nextName();
 					if (name.equalsIgnoreCase("player")) {
-						player = new IgnorePlayer(this,plugin.getServer().getPlayer(reader.nextString()));
+						player = new IgnorePlayer(this,reader.nextString());
 					}
 					else if (name.equalsIgnoreCase("ignoreall")) {
 						if (reader.nextBoolean()) {
-							player.toggleAllIgnore();
+							player.toggleAllIgnore(false);
 						}
 					}
 					else if (name.equalsIgnoreCase("ignores")) {
@@ -327,9 +327,9 @@ public class IgnoreModule implements IModule {
 							reader.beginObject();
 							String n = reader.nextName();
 							if (n.equalsIgnoreCase("name")) {
-								Player pl = plugin.getServer().getPlayer(reader.nextString());
+								String pl = reader.nextString();
 								if (pl != null) {
-									player.ignorePlayer(pl);
+									player.ignorePlayer(pl,false);
 								}
 							}
 							reader.endObject();

@@ -27,77 +27,94 @@ import org.bukkit.entity.Player;
  */
 public class IgnorePlayer {
 	private boolean allIgnore = false;
-	private List<Player> ignoreList = new ArrayList<Player>();
-	private Player player;
+	/*
+	 * Converted this from "raw" player objects to String of the player's names.
+	 * Due to the fact player objects are null when json is parsed.
+	 */
+	private List<String> ignoreList = new ArrayList<String>();
+	private String player;
 	private IgnoreModule module;
 
-	public IgnorePlayer(IgnoreModule module, Player player) {
+	public IgnorePlayer(IgnoreModule module, String player) {
 		this.module = module;
 		this.player = player;
 	}
 
-	public void unignorePlayer(Player player) {
+	public void unignorePlayer(String player, boolean inform) {
+		Player currentPlayer = module.getPlugin().getServer().getPlayerExact(this.player);
 		if (player != null) {
 			if (ignoreList.contains(player)) {
 				ignoreList.remove(player);
-				this.player.sendMessage(
-						module.getPlugin().getStringFromConfig("ignorecraft.messages.info.removed"
-						, player.getName())
-						);
+				if (inform) {
+					currentPlayer.sendMessage(
+							module.getPlugin().getStringFromConfig("ignorecraft.messages.info.removed"
+							, player)
+							);
+				}
 			}
-			else {
-				this.player.sendMessage(
+			else if (inform) {
+				currentPlayer.sendMessage(
 						module.getPlugin().getStringFromConfig("ignorecraft.messages.errors.isnotignored"
-						, player.getName())
+						, player)
 						);
 			}
 		}
 	}
 
-	public void ignorePlayer(Player player) {
+	public void ignorePlayer(String player, boolean inform) {
+		Player currentPlayer = module.getPlugin().getServer().getPlayerExact(this.player);
+		Player ignorePlayer = module.getPlugin().getServer().getPlayerExact(player);
 		if (player != null) {
 			if (!ignoreList.contains(player)) {
-				this.player.sendMessage(
-						module.getPlugin().getStringFromConfig("ignorecraft.messages.info.added"
-						, player.getName())
-						);
-				player.sendMessage(
-						module.getPlugin().getStringFromConfig("ignorecraft.messages.info.ignored"
-						, this.player.getName())
-						);
+				if (inform) {
+					currentPlayer.sendMessage(
+							module.getPlugin().getStringFromConfig("ignorecraft.messages.info.added"
+							, player)
+							);
+					ignorePlayer.sendMessage(
+							module.getPlugin().getStringFromConfig("ignorecraft.messages.info.ignored"
+							, this.player)
+							);
+				}
 				ignoreList.add(player);
 			}
-			else {
-				this.player.sendMessage(
+			else if (inform) {
+				currentPlayer.sendMessage(
 						module.getPlugin().getStringFromConfig("ignorecraft.messages.errors.alreadyignored"
-						, player.getName())
+						, player)
 						);
 			}
 		}
 	}
 
 	public boolean isAllIgnored() { return allIgnore; }
-	public void toggleAllIgnore() {
+	public void toggleAllIgnore(boolean inform) {
 		allIgnore = !allIgnore;
-		if (allIgnore) {
-			player.sendMessage(
-					module.getPlugin().getStringFromConfig("ignorecraft.messages.info.allignore_on")
-					);
-		}
-		else {
-			player.sendMessage(
-					module.getPlugin().getStringFromConfig("ignorecraft.messages.info.allignore_off")
-					);
+		if (inform) {
+			Player currentPlayer = module.getPlugin().getServer().getPlayerExact(this.player);
+			if (allIgnore) {
+				currentPlayer.sendMessage(
+						module.getPlugin().getStringFromConfig("ignorecraft.messages.info.allignore_on")
+						);
+			}
+			else {
+				currentPlayer.sendMessage(
+						module.getPlugin().getStringFromConfig("ignorecraft.messages.info.allignore_off")
+						);
+			}
 		}
 	}
 
 	public Player getPlayer() {
-	    return player;
+	    return module.getPlugin().getServer().getPlayerExact(this.player);
 	}
-	public boolean isIgnored(Player player) {
+	public String getPlayerName() {
+	    return this.player;
+	}
+	public boolean isIgnored(String player) {
 		return ignoreList.contains(player);
 	}
-	public List<Player> getIgnoreList() {
+	public List<String> getIgnoreList() {
 	    return ignoreList;
 	}
 

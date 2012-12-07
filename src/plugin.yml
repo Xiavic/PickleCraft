@@ -120,3 +120,6 @@ permissions:
  PickleCraft.colors.special:
    description: allow special colors in chatformater.
    default: op
+ PickleCraft.invisiblity.admin:
+   description: allows admins to "vanish"
+   default: op

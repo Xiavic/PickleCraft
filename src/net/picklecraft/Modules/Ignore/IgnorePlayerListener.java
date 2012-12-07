@@ -15,13 +15,13 @@ public class IgnorePlayerListener implements Listener {
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat (AsyncPlayerChatEvent event) {
-		Player[] players = event.getRecipients().toArray(new Player[0]);
-		for (int i = 0; i < players.length; i++) {
-			IgnorePlayer igPlayer = module.getIgnorePlayer(players[i]);
-			if (igPlayer != null) {
-				if (igPlayer.isIgnored(event.getPlayer()) || igPlayer.isAllIgnored()) {
-					if (!PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.ignore.cantbeignored")) {
-						event.getRecipients().remove(players[i]);
+		if (!PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.ignore.cantbeignored")) {
+			Player[] players = event.getRecipients().toArray(new Player[0]);
+			for (int i = 0; i < players.length; i++) {
+				IgnorePlayer igPlayer = module.getIgnorePlayer(players[i]);
+				if (igPlayer != null) {
+					if (igPlayer.isIgnored(event.getPlayer().getName()) || igPlayer.isAllIgnored()) {
+							event.getRecipients().remove(players[i]);
 					}
 				}
 			}
