@@ -281,7 +281,7 @@ public class IgnoreModule implements IModule {
                 writer.beginArray();
                 for (IgnorePlayer player : playerIgnoreList) {
                     writer.beginObject();
-                    writer.name("player").value(player.getPlayer().getName());
+                    writer.name("player").value(player.getPlayerName());
                     if (player.getIgnoreList().size() > 0) {
 						 writer.name("ignoreall").value(player.isAllIgnored());
                          writer.name("ignores");
