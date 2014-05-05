@@ -19,20 +19,20 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
  *
- * Copyright (c) 2011-2012
+ * Copyright (c) 2011-2014
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * @author Pickle
@@ -43,67 +43,68 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
  * (as it's becoming annoying, adding random non useful functions) for my use.
  */
 public class ChatFormatModule implements IModule, Listener {
-        private Pattern pattern = Pattern.compile("%");
-	private PickleCraftPlugin plugin;
-	private PermissionManager permEx;
 
-	private List<CounterSign> signs;
+    private final Pattern pattern = Pattern.compile("%");
+    private final PickleCraftPlugin plugin;
+    private PermissionManager permEx;
 
-	public ChatFormatModule(PickleCraftPlugin plugin) {
-            this.plugin = plugin;
-            if(Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")){
-                permEx = PermissionsEx.getPermissionManager();
-                plugin.getServer().getPluginManager().registerEvents(this, plugin);
-            }
-            else {
-                PickleCraftPlugin.moduleManager.unloadModule(this);
-                PickleCraftPlugin.log.info("Could not find pex!");
-            }
-	}
+    private List<CounterSign> signs;
 
-	@Override
-	public void onDisable() {
-
-	}
-
-	@Override
-	public void onEnable() {
-
-	}
-
-	@Override
-	public PickleCraftPlugin getPlugin() {
-            return plugin;
-	}
-
-	@Override
-	public String getName() {
-            return "ChatFormat";
-	}
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            return false;
-	}
-
-	@Override
-	public void sendCommandList(CommandSender sender) {
-
+    public ChatFormatModule(PickleCraftPlugin plugin) {
+        this.plugin = plugin;
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+            permEx = PermissionsEx.getPermissionManager();
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        } else {
+            PickleCraftPlugin.moduleManager.unloadModule(this);
+            PickleCraftPlugin.log.info("Could not find pex!");
         }
+    }
 
-        @EventHandler(priority = EventPriority.LOWEST)
-        public void onChat(AsyncPlayerChatEvent event) {
-            StringBuilder sb = new StringBuilder();
-            PermissionUser user = permEx.getUser(event.getPlayer());
-            sb.append(user.getPrefix());
-            sb.append(event.getPlayer().getDisplayName());
-            sb.append(user.getSuffix());
-            /*
-             * exscape "%" in the message
-             * also, remove undesired coloring.
-             */
-	    String message = PickleCraftPlugin.StripColor(event.getMessage(),event.getPlayer());
-            Matcher m = pattern.matcher(message);
-            sb.append(m.replaceAll("%%"));
-            event.setFormat(PickleCraftPlugin.Colorize(sb.toString()));
-        }
+    @Override
+    public void onDisable() {
+
+    }
+
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public PickleCraftPlugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    public String getName() {
+        return "ChatFormat";
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return false;
+    }
+
+    @Override
+    public void sendCommandList(CommandSender sender) {
+
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onChat(AsyncPlayerChatEvent event) {
+        StringBuilder sb = new StringBuilder();
+        PermissionUser user = permEx.getUser(event.getPlayer());
+        sb.append(user.getPrefix());
+        sb.append(event.getPlayer().getDisplayName());
+        sb.append(user.getSuffix());
+        /*
+         * exscape "%" in the message
+         * also, remove undesired coloring.
+         */
+        String message = PickleCraftPlugin.StripColor(event.getMessage(), event.getPlayer());
+        Matcher m = pattern.matcher(message);
+        sb.append(m.replaceAll("%%"));
+        event.setFormat(PickleCraftPlugin.Colorize(sb.toString()));
+    }
 }

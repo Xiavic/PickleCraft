@@ -6,7 +6,6 @@ modules:
 - net.picklecraft.Modules.PrivateWarps.PWModule
 - net.picklecraft.Modules.SignRank.SignRankModule
 - net.picklecraft.Modules.Timber.TimberModule
-- net.picklecraft.Modules.InvisibilityNerf.InvisibilityNerfModule
 common:
   messages:
     errors:
@@ -85,10 +84,3 @@ privatewarps:
         info:
             warpset: '&2Warp set.'
             warpremove: '&2Warp Removed.'
-
-invisiblenerf:
-     maxcooldown: 400
-     messages:
-       wearoff: '&2You are no longer invisible.'
-       wearoffwarn: '&2Invisiblity is beginning to wear off.'
-       info: '&2Hold a golden watch to become invisible'

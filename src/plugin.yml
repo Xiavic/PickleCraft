@@ -1,7 +1,7 @@
 name: PickleCraft
 main: net.picklecraft.PickleCraftPlugin
 author: Pickle
-version: 2.1.5
+version: 2.2
 description: Adds various usefull things.
 softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:
@@ -119,7 +119,4 @@ permissions:
    default: op
  PickleCraft.colors.special:
    description: allow special colors in chatformater.
-   default: op
- PickleCraft.invisiblity.admin:
-   description: allows admins to "vanish"
    default: op
