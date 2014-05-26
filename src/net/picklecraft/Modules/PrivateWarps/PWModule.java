@@ -265,35 +265,35 @@ public class PWModule implements IModule, Listener {
     public void Save() {
         try (FileWriter fw = new FileWriter(pwFile); JsonWriter writer = new JsonWriter(fw)) {
             writer.setIndent(" ");
-            writer.beginArray();
+            writer.beginArray(); //begin players array
             for (PWPlayer player : players) {
                 if (player.getWarps().isEmpty()) {
                     continue;
                 }
-                writer.beginObject();
+                writer.beginObject(); //begin player object
                 writer.name("player").value(player.getName());
                 if (player.getWarps().size() > 0) {
                     writer.name("warps");
-                    writer.beginArray();
+                    writer.beginArray(); //begin warp array
                     for (Warp w : player.getWarps()) {
-                        writer.beginObject();
+                        writer.beginObject(); //begin warp object
                         writer.name("name").value(w.getName());
                         writer.name("location");
-                        writer.beginObject();
+                        writer.beginObject(); //begin location object
                         writer.name("x").value(w.getLocation().getX());
                         writer.name("y").value(w.getLocation().getY());
                         writer.name("z").value(w.getLocation().getZ());
                         writer.name("world").value(w.getLocation().getWorld().getName());
-                        writer.endObject();
-                        writer.endObject();
+                        writer.endObject(); //end location object
+                        writer.endObject(); //end warp object
                     }
-                    writer.endArray();
+                    writer.endArray(); //end warp array
                 } else {
                     writer.name("warps").nullValue();
                 }
-                writer.endObject();
+                writer.endObject(); //end player object
             }
-            writer.endArray();
+            writer.endArray(); //end players array
         } catch (IOException e) {
             PickleCraftPlugin.log.warning(e.getMessage());
         }
@@ -304,25 +304,25 @@ public class PWModule implements IModule, Listener {
             PWPlayer player = null;
             FileReader fr = new FileReader(pwFile);
             JsonReader reader = new JsonReader(fr);
-            reader.beginArray();
+            reader.beginArray(); //begin players array
             while (reader.hasNext()) {
-                reader.beginObject();
+                reader.beginObject(); //begin player object
                 while (reader.hasNext()) {
                     String name = reader.nextName();
                     if (name.equalsIgnoreCase("player")) {
                         player = new PWPlayer(this, reader.nextString());
                     } else if (name.equalsIgnoreCase("warps")) {
-                        reader.beginArray();
+                        reader.beginArray(); //begin warps array
                         while (reader.hasNext()) {
                             String warpname = "";
                             Location loc = new Location(null, 0, 0, 0);
-                            reader.beginObject();
+                            reader.beginObject(); //begin warp object
                             while (reader.hasNext()) {
                                 String n = reader.nextName();
                                 if (n.equalsIgnoreCase("name")) {
                                     warpname = reader.nextString();
                                 } else if (n.equalsIgnoreCase("location")) {
-                                    reader.beginObject();
+                                    reader.beginObject(); //begin location object
                                     while (reader.hasNext()) {
                                         String a = reader.nextName();
                                         if (a.equalsIgnoreCase("x")) {
@@ -336,23 +336,23 @@ public class PWModule implements IModule, Listener {
                                             loc.setWorld(w);
                                         }
                                     }
-                                    reader.endObject();
+                                    reader.endObject(); //end location object
                                 }
                             }
-                            reader.endObject();
+                            reader.endObject(); //end warp object
                             if (!warpname.isEmpty()) {
                                 player.setWarp(warpname, loc, true);
                             }
                         }
 
-                        reader.endArray();
+                        reader.endArray(); //end warps array
                     }
                 }
-                reader.endObject();
+                reader.endObject(); //end player object
 
                 players.add(player);
             }
-            reader.endArray();
+            reader.endArray(); //end players array
             reader.close();
             fr.close();
         } catch (EOFException e) {

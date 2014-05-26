@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
+import org.bukkit.craftbukkit.libs.com.google.gson.stream.MalformedJsonException;
 import org.bukkit.entity.Player;
 
 /**
@@ -198,9 +199,11 @@ public class IgnoreModule implements IModule {
                 sender.sendMessage("This is a player only command.");
             }
             return true;
-        } /*
+        } 
+         /*
          * display ignore list
-         */ else if (command.getName().equalsIgnoreCase("ignorelist")) { //displays ignore list
+         */ 
+         else if (command.getName().equalsIgnoreCase("ignorelist")) { //displays ignore list
             if (player != null) {
                 IgnorePlayer igP = getIgnorePlayer(player);
                 if (igP != null) {
@@ -258,26 +261,23 @@ public class IgnoreModule implements IModule {
     public void Save() {
         try (FileWriter fw = new FileWriter(igFile); JsonWriter writer = new JsonWriter(fw)) {
             writer.setIndent(" ");
-            writer.beginArray();
+            writer.beginArray(); //begin players array
             for (IgnorePlayer player : playerIgnoreList) {
-                writer.beginObject();
+                writer.beginObject(); //begin player object
                 writer.name("player").value(player.getPlayerName());
-                if (player.getIgnoreList().size() > 0) {
-                    writer.name("ignoreall").value(player.isAllIgnored());
-                    writer.name("ignores");
-                    writer.beginArray();
-                    for (String p : player.getIgnoreList()) {
-                        writer.beginObject();
-                        writer.name("name").value(p);
-                        writer.endObject();
-                    }
-                    writer.endArray();
-                } else {
-                    writer.name("ignores").nullValue();
+                writer.name("ignoreall").value(player.isAllIgnored());
+                writer.name("ignores");
+                writer.beginArray(); //begin ignore array
+                for (String p : player.getIgnoreList()) {
+                    writer.beginObject(); //begin ignored player object
+                    writer.name("name").value(p);
+                    writer.endObject(); //end ignored player object
                 }
-                writer.endObject();
+                writer.endArray(); //end ignore array
+
+                writer.endObject(); //end player object
             }
-            writer.endArray();
+            writer.endArray(); //end players array
         } catch (IOException e) {
             PickleCraftPlugin.log.warning(e.getMessage());
         }
@@ -286,9 +286,9 @@ public class IgnoreModule implements IModule {
     public void Load() {
         IgnorePlayer player = null;
         try (FileReader fr = new FileReader(igFile); JsonReader reader = new JsonReader(fr)) {
-            reader.beginArray();
+            reader.beginArray(); //begin players array
             while (reader.hasNext()) {
-                reader.beginObject();
+                reader.beginObject(); //begin player object
                 while (reader.hasNext()) {
                     String name = reader.nextName();
                     if (name.equalsIgnoreCase("player")) {
@@ -298,9 +298,9 @@ public class IgnoreModule implements IModule {
                             player.toggleAllIgnore(false);
                         }
                     } else if (name.equalsIgnoreCase("ignores")) {
-                        reader.beginArray();
+                        reader.beginArray(); //begin ignores array
                         while (reader.hasNext()) {
-                            reader.beginObject();
+                            reader.beginObject(); //begin ignored player object
                             String n = reader.nextName();
                             if (n.equalsIgnoreCase("name")) {
                                 String pl = reader.nextString();
@@ -308,16 +308,16 @@ public class IgnoreModule implements IModule {
                                     player.ignorePlayer(pl, false);
                                 }
                             }
-                            reader.endObject();
+                            reader.endObject(); //end ignored player object
                         }
-                        reader.endArray();
+                        reader.endArray(); //end ignores array
                     }
                 }
-                reader.endObject();
+                reader.endObject(); //end player object
                 playerIgnoreList.add(player);
             }
-            reader.endArray();
-        } catch (EOFException e) {
+            reader.endArray(); //end players array
+        } catch (EOFException optional) {
             //Ignore.
         } catch (IOException e) {
             PickleCraftPlugin.log.warning(e.getMessage());
