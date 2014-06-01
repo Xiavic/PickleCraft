@@ -162,7 +162,7 @@ public class PWModule implements IModule, Listener {
 
     private PWPlayer getWarpPlayer(Player player) {
         for (PWPlayer p : players) {
-            if (player.getUniqueId() == p.getUUID()) {
+            if (player.getUniqueId().compareTo(p.getUUID()) == 0) {
                 return p;
             }
         }
@@ -272,7 +272,7 @@ public class PWModule implements IModule, Listener {
                     continue;
                 }
                 writer.beginObject(); //begin player object
-                writer.name("player").value(player.getUUID().toString());
+                writer.name("uuid").value(player.getUUID().toString());
                 if (player.getWarps().size() > 0) {
                     writer.name("warps");
                     writer.beginArray(); //begin warp array
@@ -310,7 +310,7 @@ public class PWModule implements IModule, Listener {
                 reader.beginObject(); //begin player object
                 while (reader.hasNext()) {
                     String name = reader.nextName();
-                    if (name.equalsIgnoreCase("player")) {
+                    if (name.equalsIgnoreCase("uuid")) {
                         UUID uuid = UUID.fromString(reader.nextString());
                         player = new PWPlayer(this, uuid);
                     } else if (name.equalsIgnoreCase("warps")) {
