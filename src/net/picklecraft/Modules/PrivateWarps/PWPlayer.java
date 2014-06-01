@@ -4,8 +4,12 @@ import com.sk89q.wepif.PermissionsResolverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import net.picklecraft.Modules.PrivateWarps.PWModule.WarpStatus;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
  *
@@ -30,17 +34,17 @@ import org.bukkit.Location;
 public class PWPlayer {
 
     private final PWModule module;
-    private final String name;
+    private final UUID uuid;
     private final List<Warp> warps = new ArrayList<>();
     private int limit = -1; //-1 respresents unlimited.
 
-    public PWPlayer(PWModule module, String name) {
+    public PWPlayer(PWModule module, UUID uuid) {
         this.module = module;
-        this.name = name;
+        this.uuid = uuid;
     }
 
-    public String getName() {
-        return this.name;
+    public UUID getUUID() {
+        return uuid;
     }
 
     public List<Warp> getWarps() {
@@ -89,19 +93,23 @@ public class PWPlayer {
     public int GetMaxLimit() {
         limit = -1;
         PermissionsResolverManager p = PermissionsResolverManager.getInstance();
-        String[] groups = p.getGroups(this.name); // get all groups the player is in
-        HashMap<String, Integer> m = module.GetMaxLimitRanks(); // get the rank keys.
-        for (int g = 0; g < groups.length; g++) {
-            String lowerG = groups[g].toLowerCase(); // lowercase to match anything ;3
-            if (m.containsKey(lowerG)) {
-                Integer li = m.get(lowerG);
-                if (li == -1) { //if we find group with -1, don't bother with the rest.
-                    limit = li;
-                    return limit;
-                }
-                //get the highest limit from all groups.
-                if (li > limit) { //if key is the same as a group the player is in, then compare if it is higher.
-                    limit = li;
+        if (p != null) {
+            Player player = module.getPlugin().getServer().getPlayer(uuid);
+            PermissionUser user = PermissionsEx.getUser(player);
+            String[] groups = user.getGroupsNames(); // get all groups the player is in
+            HashMap<String, Integer> m = module.GetMaxLimitRanks(); // get the rank keys.
+            for (int g = 0; g < groups.length; g++) {
+                String lowerG = groups[g].toLowerCase(); // lowercase to match anything ;3
+                if (m.containsKey(lowerG)) {
+                    Integer li = m.get(lowerG);
+                    if (li == -1) { //if we find group with -1, don't bother with the rest.
+                        limit = li;
+                        return limit;
+                    }
+                    //get the highest limit from all groups.
+                    if (li > limit) { //if key is the same as a group the player is in, then compare if it is higher.
+                        limit = li;
+                    }
                 }
             }
         }

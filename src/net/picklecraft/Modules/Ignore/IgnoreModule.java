@@ -3,6 +3,7 @@ package net.picklecraft.Modules.Ignore;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.PickleCraftPlugin;
@@ -10,7 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
-import org.bukkit.craftbukkit.libs.com.google.gson.stream.MalformedJsonException;
 import org.bukkit.entity.Player;
 
 /**
@@ -123,7 +123,7 @@ public class IgnoreModule implements IModule {
                                     if ((Boolean) playerAndbool[1] == false) {
                                         IgnorePlayer igP = getIgnorePlayer(player);
                                         if (igP != null) {
-                                            igP.unignorePlayer(p.getName(), true);
+                                            igP.unignorePlayer(p.getUniqueId(), true);
                                         } else {
                                             player.sendMessage(
                                                     plugin.getStringFromConfig("ignorecraft.messages.errors.isnotignored", p.getName())
@@ -148,10 +148,10 @@ public class IgnoreModule implements IModule {
                                 if ((Boolean) playerAndbool[1] == false) {
                                     IgnorePlayer igP = getIgnorePlayer(player);
                                     if (igP != null) {
-                                        igP.ignorePlayer(p.getName(), true);
+                                        igP.ignorePlayer(p.getUniqueId(), true);
                                     } else {
-                                        igP = new IgnorePlayer(this, player.getName());
-                                        igP.ignorePlayer(p.getName(), true);
+                                        igP = new IgnorePlayer(this, player.getUniqueId());
+                                        igP.ignorePlayer(p.getUniqueId(), true);
                                         playerIgnoreList.add(igP);
                                     }
                                 } else {
@@ -186,7 +186,7 @@ public class IgnoreModule implements IModule {
                     if (igP != null) {
                         igP.toggleAllIgnore(true);
                     } else {
-                        igP = new IgnorePlayer(this, player.getName());
+                        igP = new IgnorePlayer(this, player.getUniqueId());
                         igP.toggleAllIgnore(true);
                         playerIgnoreList.add(igP);
                     }
@@ -232,7 +232,7 @@ public class IgnoreModule implements IModule {
                     plugin.getStringFromConfig("ignorecraft.messages.info.ignoreall")
             );
         } else {
-            ArrayList<String> ignores = (ArrayList<String>) player.getIgnoreList();
+            ArrayList<UUID> ignores = (ArrayList<UUID>) player.getIgnoreList();
             if (ignores.size() <= 0) {
                 player.getPlayer().sendMessage(
                         plugin.getStringFromConfig("ignorecraft.messages.errors.noignores")
@@ -241,8 +241,9 @@ public class IgnoreModule implements IModule {
                 StringBuilder s = new StringBuilder();
                 s.append("&2Ignoring: ");
                 for (int i = 0; i < ignores.size(); i++) {
+                    Player p = plugin.getServer().getPlayer(ignores.get(i));
                     s.append("&e");
-                    s.append(ignores.get(i));
+                    s.append(p.getName());
                     s.append(", ");
                     if (i % 8 == 0 && i != 0) {
                         player.getPlayer().sendMessage(PickleCraftPlugin.Colorize(s.toString()));
@@ -264,13 +265,13 @@ public class IgnoreModule implements IModule {
             writer.beginArray(); //begin players array
             for (IgnorePlayer player : playerIgnoreList) {
                 writer.beginObject(); //begin player object
-                writer.name("player").value(player.getPlayerName());
+                writer.name("uuid").value(player.getUUID().toString());
                 writer.name("ignoreall").value(player.isAllIgnored());
                 writer.name("ignores");
                 writer.beginArray(); //begin ignore array
-                for (String p : player.getIgnoreList()) {
+                for (UUID uuid : player.getIgnoreList()) {
                     writer.beginObject(); //begin ignored player object
-                    writer.name("name").value(p);
+                    writer.name("uuid").value(uuid.toString());
                     writer.endObject(); //end ignored player object
                 }
                 writer.endArray(); //end ignore array
@@ -291,27 +292,34 @@ public class IgnoreModule implements IModule {
                 reader.beginObject(); //begin player object
                 while (reader.hasNext()) {
                     String name = reader.nextName();
-                    if (name.equalsIgnoreCase("player")) {
-                        player = new IgnorePlayer(this, reader.nextString());
-                    } else if (name.equalsIgnoreCase("ignoreall")) {
+                    
+                    if (name.equalsIgnoreCase("uuid")) {
+                        UUID uuid = UUID.fromString(reader.nextString());
+                        player = new IgnorePlayer(this, uuid);
+                    } 
+                    
+                    else if (name.equalsIgnoreCase("ignoreall")) {
                         if (reader.nextBoolean()) {
                             player.toggleAllIgnore(false);
                         }
-                    } else if (name.equalsIgnoreCase("ignores")) {
+                    } 
+                    
+                    else if (name.equalsIgnoreCase("ignores")) {
                         reader.beginArray(); //begin ignores array
                         while (reader.hasNext()) {
                             reader.beginObject(); //begin ignored player object
                             String n = reader.nextName();
-                            if (n.equalsIgnoreCase("name")) {
-                                String pl = reader.nextString();
-                                if (pl != null) {
-                                    player.ignorePlayer(pl, false);
+                            if (n.equalsIgnoreCase("uuid")) {
+                                UUID ignoredUuid = UUID.fromString(reader.nextString());
+                                if (ignoredUuid != null) {
+                                    player.ignorePlayer(ignoredUuid, false);
                                 }
                             }
                             reader.endObject(); //end ignored player object
                         }
                         reader.endArray(); //end ignores array
                     }
+                    
                 }
                 reader.endObject(); //end player object
                 playerIgnoreList.add(player);

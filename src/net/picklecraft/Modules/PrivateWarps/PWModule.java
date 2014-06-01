@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.PickleCraftPlugin;
@@ -161,11 +162,11 @@ public class PWModule implements IModule, Listener {
 
     private PWPlayer getWarpPlayer(Player player) {
         for (PWPlayer p : players) {
-            if (player.getName().equalsIgnoreCase(p.getName())) {
+            if (player.getUniqueId() == p.getUUID()) {
                 return p;
             }
         }
-        PWPlayer p = new PWPlayer(this, player.getName());
+        PWPlayer p = new PWPlayer(this, player.getUniqueId());
         players.add(p);
         return p;
     }
@@ -271,7 +272,7 @@ public class PWModule implements IModule, Listener {
                     continue;
                 }
                 writer.beginObject(); //begin player object
-                writer.name("player").value(player.getName());
+                writer.name("player").value(player.getUUID().toString());
                 if (player.getWarps().size() > 0) {
                     writer.name("warps");
                     writer.beginArray(); //begin warp array
@@ -310,7 +311,8 @@ public class PWModule implements IModule, Listener {
                 while (reader.hasNext()) {
                     String name = reader.nextName();
                     if (name.equalsIgnoreCase("player")) {
-                        player = new PWPlayer(this, reader.nextString());
+                        UUID uuid = UUID.fromString(reader.nextString());
+                        player = new PWPlayer(this, uuid);
                     } else if (name.equalsIgnoreCase("warps")) {
                         reader.beginArray(); //begin warps array
                         while (reader.hasNext()) {

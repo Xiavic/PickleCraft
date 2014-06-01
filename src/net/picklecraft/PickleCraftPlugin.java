@@ -128,8 +128,8 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
     public void reload() {
         reloadConfig();
         Bukkit.broadcastMessage(Colorize("&2Derp! reloading the plugin!"));
-        Bukkit.getPluginManager().disablePlugin(this);
-        Bukkit.getPluginManager().enablePlugin(this);
+        //Bukkit.getPluginManager().disablePlugin(this);
+        //Bukkit.getPluginManager().enablePlugin(this);
         moduleManager.reloadModules();
     }
 

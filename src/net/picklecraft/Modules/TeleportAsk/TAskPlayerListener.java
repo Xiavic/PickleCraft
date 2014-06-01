@@ -36,12 +36,12 @@ public class TAskPlayerListener implements Listener {
         this.module = module;
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         module.teleportPlayerList.add(new TeleportPlayer(module, event.getPlayer()));
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
         TeleportPlayer p = module.getTeleportPlayer(event.getPlayer());
         if (p != null) {
@@ -50,7 +50,7 @@ public class TAskPlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         TeleportPlayer p = module.getTeleportPlayer(event.getPlayer());
         if (p != null) {
