@@ -239,6 +239,10 @@ public class TeleportAskModule implements IModule {
                 if (PickleCraftPlugin.hasPerm(player, command.getPermission())) {
                     if (args.length >= 1) {
                         String[] coord = args[0].split(",");
+                        for (int i = 0; i < coord.length; i++) {
+                            coord[i] = coord[i].trim();
+                        }
+                        
                         if (coord.length >= 2) {
                             try {
                                 int x = Integer.parseInt(coord[0]);
