@@ -1,13 +1,12 @@
 PickleCraft is my personal plugin.
-Orginally created for Orcworm.co.uk, but has been slightly modified to be able to add "components"
-these components are generally single classes and are loadable from the config.
-
 This plugin is operated on several small private servers including my own: mc.picklecraft.net
 
 ChangeLog
+2.2.1 - Added UUID support and several bug fixes.
+2.2 - Removed Invisibility module; Updated for Bukkit 1.7.9 and major code cleanup.
 2.1.5 - Various fixes. Invis nerf works properly, needs a few more tweaks.
 	Private warps now have limits.
-2.1 - Added invisibitly nerf. Now acts like TF2 spy class. Various other fixes.
+2.1 - Added invisibility nerf. Now acts like TF2 spy class. Various other fixes.
 	Removed internal GSON and now relies on craftbukkit's
 2.0 - Removed old properties, json only :3, and added signrank perm to click.
 1.9.5 - Updated for 1.3, chat formater can strip "special" colors according to perms.
