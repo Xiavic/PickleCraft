@@ -3,6 +3,7 @@ package net.picklecraft.Modules.Ignore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.entity.Player;
 
 /**
@@ -43,17 +44,23 @@ public class IgnorePlayer {
     public void unignorePlayer(UUID uuid, boolean inform) {
         Player currentPlayer = module.getPlugin().getServer().getPlayer(this.uuid);
         if (uuid != null) {
-            if (ignoreList.contains(uuid)) {
-                ignoreList.remove(uuid);
-                if (inform) {
+            Player ignoredPlayer = module.getPlugin().getServer().getPlayer(uuid);
+            if (ignoredPlayer != null) {
+                if (ignoreList.contains(uuid)) {
+                    ignoreList.remove(uuid);
+                    if (inform) {
+                        currentPlayer.sendMessage(
+                                module.getPlugin().getStringFromConfig("ignorecraft.messages.info.removed", ignoredPlayer.getName())
+                        );
+                    }
+                } else if (inform) {
                     currentPlayer.sendMessage(
-                            module.getPlugin().getStringFromConfig("ignorecraft.messages.info.removed", uuid)
+                            module.getPlugin().getStringFromConfig("ignorecraft.messages.errors.isnotignored", ignoredPlayer.getName())
                     );
                 }
-            } else if (inform) {
-                currentPlayer.sendMessage(
-                        module.getPlugin().getStringFromConfig("ignorecraft.messages.errors.isnotignored", uuid)
-                );
+            }
+            else {
+                currentPlayer.sendMessage(PickleCraftPlugin.Colorize("&4Player doesn't exist."));
             }
         }
     }

@@ -12,6 +12,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldSaveEvent;
 
 /**
  * Copyright (c) 2011-2014
@@ -33,7 +37,7 @@ import org.bukkit.entity.Player;
  *
  * Currently broke..
  */
-public class IgnoreModule implements IModule {
+public class IgnoreModule implements IModule, Listener {
 
     public List<IgnorePlayer> playerIgnoreList = new ArrayList<>();
 
@@ -41,7 +45,7 @@ public class IgnoreModule implements IModule {
 
     private IgnorePlayerListener igPlayerListener;
 
-    private File igFile;
+    private final File igFile;
 
     public IgnoreModule(PickleCraftPlugin plugin) {
         this.plugin = plugin;
@@ -74,6 +78,7 @@ public class IgnoreModule implements IModule {
     public void onEnable() {
         igPlayerListener = new IgnorePlayerListener(this);
         plugin.getServer().getPluginManager().registerEvents(igPlayerListener, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         Load();
     }
 
@@ -332,4 +337,9 @@ public class IgnoreModule implements IModule {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onWorldSave(WorldSaveEvent event) {
+        //save json when the world does.
+        Save();
+    }
 }
