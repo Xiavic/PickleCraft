@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldSaveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Copyright (c) 2011-2014
@@ -38,7 +39,9 @@ import org.bukkit.event.world.WorldSaveEvent;
  * Currently broke..
  */
 public class IgnoreModule implements IModule, Listener {
-
+    
+    private final long SAVE_PERIOD = 1200L; //1 minute
+    
     public List<IgnorePlayer> playerIgnoreList = new ArrayList<>();
 
     private final PickleCraftPlugin plugin;
@@ -80,6 +83,16 @@ public class IgnoreModule implements IModule, Listener {
         plugin.getServer().getPluginManager().registerEvents(igPlayerListener, plugin);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         Load();
+        
+        //Automatic save after time
+        new BukkitRunnable() {
+ 
+            @Override
+            public void run() {
+                Save();
+            }
+ 
+        }.runTaskTimer(plugin, 0L, SAVE_PERIOD);
     }
 
     @Override

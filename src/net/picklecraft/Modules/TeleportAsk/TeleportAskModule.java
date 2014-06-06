@@ -7,6 +7,7 @@ import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Copyright (c) 2011-2014
@@ -28,7 +29,9 @@ import org.bukkit.entity.Player;
  *
  */
 public class TeleportAskModule implements IModule {
-
+    
+    private final long UPDATE_PERIOD = 20L; //1 second
+    
     public List<TeleportPlayer> teleportPlayerList = new ArrayList<>();
 
     private final PickleCraftPlugin plugin;
@@ -78,14 +81,15 @@ public class TeleportAskModule implements IModule {
         /* run update on teleport players..
          * 20L = 1 second worth of ticks.
          */
-        plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 for (TeleportPlayer player : teleportPlayerList) {
                     player.Update();
                 }
             }
-        }, 0L, 20L);
+        }.runTaskTimer(plugin, 0L, UPDATE_PERIOD);
+       
     }
 
     @Override
