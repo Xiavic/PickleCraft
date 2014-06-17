@@ -186,11 +186,21 @@ public class PWModule implements IModule, Listener {
     private void setWarp(Player player, String name) {
         if (name != null) {
             PWPlayer p = getWarpPlayer(player);
-            WarpStatus warpFail = p.setWarp(name, player.getLocation(), false);
+            Location loc = player.getLocation();
+            WarpStatus warpFail = p.setWarp(name, loc, false);
             if (warpFail == WarpStatus.SUCCESS) {
                 player.sendMessage(
                         plugin.getStringFromConfig("privatewarps.messages.info.warpset")
                 );
+                plugin.getLogger().log(Level.INFO, "{0} set PW {1} at {2} {3} {4} {5}", 
+                        new Object[]{
+                            player.getName(), 
+                            name, 
+                            loc.getWorld().getName(),
+                            loc.getBlockX(),
+                            loc.getBlockY(),
+                            loc.getBlockZ()
+                        });
             } else if (warpFail == WarpStatus.FAIL) {
                 player.sendMessage(
                         plugin.getStringFromConfig("privatewarps.messages.errors.warpexist", name, name)
@@ -210,6 +220,7 @@ public class PWModule implements IModule, Listener {
                 player.sendMessage(
                         plugin.getStringFromConfig("privatewarps.messages.info.warpremove")
                 );
+                plugin.getLogger().info(player.getName() +" removed PW "+ name);
             } else {
                 player.sendMessage(
                         plugin.getStringFromConfig("privatewarps.messages.errors.warpnoexist", name)
