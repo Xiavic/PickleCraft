@@ -221,9 +221,9 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
             int level = enchantments.get(Enchantment.DURABILITY) + 1;
             float rand = random.nextFloat();
            
-            float ratio = 1 / level; 
+            float ratio = (1 / level)+0.1F; 
             //If the chance is greater than the chance ratio, then do not damage the item.
-            if (rand >= ratio) {
+            if (rand > ratio) {
                 d = item.getDurability();
             }
             

@@ -159,9 +159,10 @@ public class TimberModule implements IModule {
 
         /*
         *Ignore this until I figure a workaround unbreaking enchantment not affecting damage rate.
+        */
         if (player.getItemInHand().getType() == Material.AIR) {
             return;
-        }*/
+        }
         
         breakBlock(player, x, y, z);
         
