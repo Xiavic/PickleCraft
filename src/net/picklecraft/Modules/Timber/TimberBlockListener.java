@@ -41,17 +41,31 @@ public class TimberBlockListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         if (!event.isCancelled()) {
             if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-                if (event.getBlock().getType() != TimberModule.treeMaterials[0]
-                        && event.getBlock().getType() != TimberModule.treeMaterials[1]) {
+                
+                if (event.getPlayer().isSneaking()) {
                     return;
                 }
-                if (PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.timber.cut")) {
-                    if (event.getPlayer().getItemInHand().getType() == Material.IRON_AXE
-                            || event.getPlayer().getItemInHand().getType() == Material.GOLD_AXE
-                            || event.getPlayer().getItemInHand().getType() == Material.DIAMOND_AXE) {
-                        module.CutTree(event.getPlayer(), event.getBlock());
+                
+                boolean matMatch = false;
+                for (Material m : TimberModule.treeMaterials)
+                {
+                    if (event.getBlock().getType() == m) {
+                        matMatch = true;
+                        break;
                     }
                 }
+                if (!matMatch) {
+                    return;
+                }
+                
+                if (PickleCraftPlugin.hasPerm(event.getPlayer(), "PickleCraft.timber.cut")) {
+                    if (event.getPlayer().getItemInHand().getType() == Material.GOLD_AXE
+                            || event.getPlayer().getItemInHand().getType() == Material.DIAMOND_AXE) {
+                        module.CutTree(event.getPlayer(), event.getBlock());
+                        event.setCancelled(true);
+                    }
+                }
+                
             }
         }
     }

@@ -2,21 +2,27 @@ package net.picklecraft;
 
 import com.sk89q.wepif.PermissionsResolverManager;
 import java.util.IllegalFormatException;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import net.picklecraft.Modules.IModule;
 import net.picklecraft.Modules.ModuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,6 +57,8 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 
     private static boolean worldedit;
 
+    
+    private final Random random = new Random();
     /*
      * returns Player and a Boolean (that defines if multiple players was found).
      * first value will be Player
@@ -202,8 +210,32 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
         }
     }
 
+
     public void Damage(Player player, int amount) {
-        player.getItemInHand().setDurability((short) (player.getItemInHand().getDurability() + amount));
+        ItemStack item = player.getItemInHand();
+        short d = (short)(item.getDurability() + amount);
+        
+        //If item has unbreaking enchantment, then give a chance to not break!
+        Map<Enchantment, Integer> enchantments = item.getEnchantments();
+        if (enchantments.containsKey(Enchantment.DURABILITY)) {
+            int level = enchantments.get(Enchantment.DURABILITY) + 1;
+            float rand = random.nextFloat();
+           
+            float ratio = 1 / level; 
+            //If the chance is greater than the chance ratio, then do not damage the item.
+            if (rand >= ratio) {
+                d = item.getDurability();
+            }
+            
+        }
+        
+        
+        item.setDurability(d);
+        if (d > player.getItemInHand().getType().getMaxDurability()) {
+            item.setType(Material.AIR);
+            player.setItemInHand(item);
+            player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

@@ -14,6 +14,7 @@ import de.diddiz.LogBlock.LogBlock;
 
 import net.picklecraft.PickleCraftPlugin;
 import net.picklecraft.Modules.IModule;
+import org.bukkit.World;
 
 /**
  * Copyright (c) 2011-2014
@@ -42,8 +43,18 @@ public class TimberModule implements IModule {
 
     private Consumer lbconsumer = null;
 
-    protected static Material treeMaterials[] = {Material.LOG, Material.LEAVES};
-
+    protected static Material treeMaterials[] = {Material.LOG, Material.LOG_2, Material.LEAVES, Material.LEAVES_2};
+    
+    protected enum CutType {
+        SUPER,
+        STANDARD
+    }
+    
+    private final int STANDARD_MAX_RANGE;
+    private final int STANDARD_MAX_HEIGHT;
+    private final int SUPER_MAX_RANGE;
+    private final int SUPER_MAX_HEIGHT;
+    
     public TimberModule(PickleCraftPlugin plugin) {
         this.plugin = plugin;
         this.blockListener = new TimberBlockListener(this);
@@ -54,6 +65,11 @@ public class TimberModule implements IModule {
         }
         pm.registerEvents(blockListener, plugin);
 
+        STANDARD_MAX_RANGE = plugin.getConfig().getInt("timber.standardMaxRange");
+        STANDARD_MAX_HEIGHT = plugin.getConfig().getInt("timber.standardMaxHeight");
+        SUPER_MAX_RANGE = plugin.getConfig().getInt("timber.superMaxRange");
+        SUPER_MAX_HEIGHT = plugin.getConfig().getInt("timber.superMaxHeight");
+        
     }
 
     @Override
@@ -86,91 +102,95 @@ public class TimberModule implements IModule {
 
     }
 
-    private void breakBlock(Block b, Player player, boolean damage) {
+    private void breakBlock(Player player, int x, int y, int z) {
+        Block b = player.getWorld().getBlockAt(x, y, z);
         if (lbconsumer != null) {
             lbconsumer.queueBlockBreak(player.getName(), b.getState());
         }
-        b.breakNaturally();
-
-        if (damage) {
-            plugin.Damage(player, 1);
-        }
+        
+        b.breakNaturally(player.getItemInHand());
+        plugin.Damage(player, 1);
     }
 
     public void CutTree(Player player, Block log) {
-
-        int m = 0;
-        //Lets choose our max height for each tree.
-        switch (log.getData()) {
-            case 0:
-                m = 10;
-                break;
-            case 1:
-                m = 15;
-                break;
-            case 2:
-                m = 10;
-                break;
-            case 3:
-                m = 25;
-                break;
-            default:
-                m = 10;
-        }
-        int y = log.getY();
-        int max = y + m;
-        if (max > player.getWorld().getMaxHeight()) {
-            max = player.getWorld().getMaxHeight();
-        }
         if (player.getItemInHand().getType() == Material.GOLD_AXE) { //superaxe!
-            for (; y < max; y++) {
-                for (int x = -1; x < 2; x++) {
-                    for (int z = -1; z < 2; z++) {
-                        Block b = player.getWorld().getBlockAt(log.getX() + x, y, log.getZ() + z);
-                        //Help save the rainforest!
-                        if (b.getType() == treeMaterials[0]) {
-                            if (b.getData() == 3 && !PickleCraftPlugin.hasPerm(player, "PickleCraft.timber.cut.jungle")) {
-                                return;
-                            }
-                            breakBlock(b, player, false);
-                        } else if (b.getType() == treeMaterials[1]) {
-                            if (b.getData() == 3 && !PickleCraftPlugin.hasPerm(player, "PickleCraft.timber.cut.jungle")) {
-                                return;
-                            }
-                            breakBlock(b, player, false);
-                        } else {
-                            if (b.getType() == Material.AIR) {
-                                //derp must ran out of tree?
-                                if (x == 0 && z == 0) {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                plugin.Damage(player, 1); // instead per height.
-            }
-        } else {
-            for (; y < max; y++) {
-                Block b = player.getWorld().getBlockAt(log.getX(), y, log.getZ());
-                //Help save the rainforest!
-                if (b.getType() == Material.LOG) {
-                    if (b.getData() == 3 && !PickleCraftPlugin.hasPerm(player, "PickleCraft.timber.cut.jungle")) {
-                        return;
-                    }
-                    breakBlock(b, player, true);
-                } else if (b.getType() == Material.LEAVES) {
-                    if (b.getData() == 3 && !PickleCraftPlugin.hasPerm(player, "PickleCraft.timber.cut.jungle")) {
-                        return;
-                    }
-                    breakBlock(b, player, true);
-                } else {
-                    if (b.getType() == Material.AIR) {
-                        return;
-                    }
-                }
+            breakChain(player, log, CutType.SUPER, log.getX(), log.getY(), log.getZ());
+        }
+        else {
+            breakChain(player, log, CutType.STANDARD, log.getX(), log.getY(), log.getZ());
+        }
+ 
+    }
+    
+    public Material getMaterialFromBlock(World w, int x, int y, int z) {
+        return w.getBlockAt(x,y,z).getType();
+    }
+    
+    public boolean isBeyondRange(CutType cutType, Block referenceBlock, int x, int y, int z) {
+        if (cutType == CutType.STANDARD) {
+            if (Math.abs(referenceBlock.getX() - x) > STANDARD_MAX_RANGE ||
+                    Math.abs(referenceBlock.getZ() - z) > STANDARD_MAX_RANGE ||
+                    Math.abs(referenceBlock.getY() - y) > STANDARD_MAX_HEIGHT) {
+                return true;
             }
         }
+        else if (cutType == CutType.SUPER) {
+            if (Math.abs(referenceBlock.getX() - x) > SUPER_MAX_RANGE ||
+                    Math.abs(referenceBlock.getZ() - z) > SUPER_MAX_RANGE ||
+                    Math.abs(referenceBlock.getY() - y) > SUPER_MAX_HEIGHT) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /*
+    * A recurisive method to chop a tree down,
+    * Concept borrowed from http://pastebin.com/BCNURhFG
+    *
+    * Reference Block is the starting point used for as a reference point.
+    *
+    * @author Pickle, club559
+    */
+    
+    public void breakChain(Player player, Block referenceBlock, CutType cutType, int x, int y, int z) {
+        if (isBeyondRange(cutType, referenceBlock, x, y, z)) {
+            return;
+        }
+
+        /*
+        *Ignore this until I figure a workaround unbreaking enchantment not affecting damage rate.
+        if (player.getItemInHand().getType() == Material.AIR) {
+            return;
+        }*/
+        
+        breakBlock(player, x, y, z);
+        
+        for (Material mat : TimberModule.treeMaterials) {
+            if (getMaterialFromBlock(player.getWorld(), x+1, y, z) == mat) {
+                breakChain(player, referenceBlock, cutType, x+1, y, z);
+            }
+            
+            if (getMaterialFromBlock(player.getWorld(), x-1, y, z) == mat) {
+                breakChain(player, referenceBlock, cutType, x-1, y, z);
+            }
+            
+            if (getMaterialFromBlock(player.getWorld(), x, y+1, z) == mat) {
+                breakChain(player, referenceBlock, cutType, x, y+1, z);
+            }
+            
+            /*if (getMaterialFromBlock(player.getWorld(), x, y-1, z) == mat) {
+                breakChain(player, referenceBlock, cutType, x, y-1, z);
+            }*/
+
+            if (getMaterialFromBlock(player.getWorld(), x, y, z+1) == mat) {
+                breakChain(player, referenceBlock, cutType, x, y, z+1);
+            }
+            
+            if (getMaterialFromBlock(player.getWorld(), x, y, z-1) == mat) {
+                breakChain(player, referenceBlock, cutType, x, y, z-1);
+            }
+        }
+
     }
 
 }

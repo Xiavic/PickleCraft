@@ -84,3 +84,10 @@ privatewarps:
         info:
             warpset: '&2Warp set.'
             warpremove: '&2Warp Removed.'
+
+timber:
+    standardMaxRange: 1
+    standardMaxHeight: 20
+    superMaxRange: 10
+    superMaxHeight: 20
+    
