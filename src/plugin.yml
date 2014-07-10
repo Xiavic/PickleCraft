@@ -5,6 +5,9 @@ version: 2.2.3
 description: Adds various useful things.
 softdepend: [WorldEdit, PermissionsEx, LogBlock]
 commands:
+    pray:
+        description: Pray to the PickleLord!
+        usage: /pray
     ignore:
         permission: PickleCraft.ignore
         description: Ignores the player, "-r" is an optional flag to remove player from ignoreList.
