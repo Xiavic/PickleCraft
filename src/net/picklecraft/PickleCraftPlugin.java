@@ -56,7 +56,8 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
     public static final Gson gson = new Gson();
 
     private static boolean worldedit;
-
+    
+	private int spamblock;
     
     private final Random random = new Random();
     /*
@@ -150,6 +151,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+		spamblock = 0;
         if (moduleManager == null) {
             moduleManager = new ModuleManager(this);
         }
@@ -171,6 +173,18 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
+        if(cmd.getName().equalsIgnoreCase("pray")){
+			if(sender instanceof Player){
+				sender.sendMessage(ChatColor.DARK_GREEN + "PickleLord" + ChatColor.GREEN + " has recieved your prayer.");
+				if(spamblock <= 10){
+				System.out.println("PickleLord, you have recieved a prayer.");
+				spamblock = spamblock + 1;
+				}
+			}
+			else{
+				sender.sendMessage("Sending a prayer to The_Fireplace, for making this command.");
+			}
+		}
         if (command.getName().equalsIgnoreCase("picklecraft")) {
             if (args.length > 0) {
                 if (player != null) {
