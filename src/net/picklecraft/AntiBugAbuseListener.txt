@@ -1,0 +1,21 @@
+package f1repl4ce.antibugabuse;
+/*
+ * 
+ * @Author F1repl4ce
+ * 
+ */
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
+
+public class AntiBugAbuseListener implements Listener{
+	
+public void moveItemEvent(InventoryMoveItemEvent event, ItemStack stack){
+	if(stack.getAmount() >  1){
+		if(event.getDestination().getType() == InventoryType.BREWING){
+			event.setCancelled(true);
+		}
+	}
+}
+}
