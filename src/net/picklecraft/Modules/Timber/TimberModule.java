@@ -42,6 +42,7 @@ public class TimberModule implements IModule {
     private final TimberBlockListener blockListener;
 
     private Consumer lbconsumer = null;
+    private boolean serverhasmcmmo = false;
 
     protected static Material treeMaterials[] = {Material.LOG, Material.LOG_2, Material.LEAVES, Material.LEAVES_2};
     
@@ -62,6 +63,10 @@ public class TimberModule implements IModule {
         final Plugin p = pm.getPlugin("LogBlock");
         if (p != null) {
             lbconsumer = ((LogBlock) p).getConsumer();
+        }
+        final Plugin m = pm.getPlugin("mcMMO");
+        if (m != null) {
+            serverhasmcmmo = true;
         }
         pm.registerEvents(blockListener, plugin);
 
@@ -107,7 +112,29 @@ public class TimberModule implements IModule {
         if (lbconsumer != null) {
             lbconsumer.queueBlockBreak(player.getName(), b.getState());
         }
-        
+        if(serverhasmcmmo == true){//XP Awards based on mcMMO default
+            if(b.getTypeId() == 17){
+                if(b.getData() == 0 || b.getData() == 4 || b.getData() == 8 || b.getData() == 12){
+                    com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 70);//Oak
+                }else{
+                    if(b.getData() == 1 || b.getData() == 5 || b.getData() == 9 || b.getData() == 13){
+                    com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 80);//Spruce
+                    }else{
+                        if(b.getData() == 2 || b.getData() == 6 || b.getData() == 10 || b.getData() == 14){
+                        com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 90);//Birch
+                        }else{
+                            if(b.getData() == 3 || b.getData() == 7 || b.getData() == 11 || b.getData() == 16){
+                            com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 100);//Jungle
+                            }
+                        }
+                    }
+                }
+            }else{
+                if(b.getTypeId() == 162){
+                com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 70);//Dark Oak and Acacia
+                }
+            }
+        }
         b.breakNaturally(player.getItemInHand());
         plugin.Damage(player, 1);
     }
