@@ -42,6 +42,7 @@ public class TimberModule implements IModule {
     private final TimberBlockListener blockListener;
 
     private Consumer lbconsumer = null;
+    private boolean serverhasmcmmo = false;
 
     protected static Material treeMaterials[] = {Material.LOG, Material.LOG_2, Material.LEAVES, Material.LEAVES_2};
     
@@ -62,6 +63,10 @@ public class TimberModule implements IModule {
         final Plugin p = pm.getPlugin("LogBlock");
         if (p != null) {
             lbconsumer = ((LogBlock) p).getConsumer();
+        }
+        final Plugin m = pm.getPlugin("mcMMO");
+        if (m != null) {
+            serverhasmcmmo = true;
         }
         pm.registerEvents(blockListener, plugin);
 
@@ -107,7 +112,9 @@ public class TimberModule implements IModule {
         if (lbconsumer != null) {
             lbconsumer.queueBlockBreak(player.getName(), b.getState());
         }
-        
+        if(serverhasmcmmo == true){
+            com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 1);
+        }
         b.breakNaturally(player.getItemInHand());
         plugin.Damage(player, 1);
     }
