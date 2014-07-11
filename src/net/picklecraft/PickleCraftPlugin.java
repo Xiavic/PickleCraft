@@ -57,7 +57,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 
     private static boolean worldedit;
     
-	private int spamblock;
+    private int spamblock;
     
     private final Random random = new Random();
     /*
