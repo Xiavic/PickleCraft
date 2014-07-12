@@ -1,20 +1,19 @@
 package net.picklecraft.Modules.Timber;
 
+import com.gmail.nossr50.api.ExperienceAPI;
+import de.diddiz.LogBlock.Consumer;
+import de.diddiz.LogBlock.LogBlock;
+import net.picklecraft.Modules.IModule;
+import net.picklecraft.PickleCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-
-import de.diddiz.LogBlock.Consumer;
-import de.diddiz.LogBlock.LogBlock;
-
-import net.picklecraft.PickleCraftPlugin;
-import net.picklecraft.Modules.IModule;
-import org.bukkit.World;
 
 /**
  * Copyright (c) 2011-2014
@@ -42,7 +41,7 @@ public class TimberModule implements IModule {
     private final TimberBlockListener blockListener;
 
     private Consumer lbconsumer = null;
-    private boolean serverhasmcmmo = false;
+    private boolean serverHasMcmmo = false;
 
     protected static Material treeMaterials[] = {Material.LOG, Material.LOG_2, Material.LEAVES, Material.LEAVES_2};
     
@@ -66,7 +65,7 @@ public class TimberModule implements IModule {
         }
         final Plugin m = pm.getPlugin("mcMMO");
         if (m != null) {
-            serverhasmcmmo = true;
+            serverHasMcmmo = true;
         }
         pm.registerEvents(blockListener, plugin);
 
@@ -112,27 +111,20 @@ public class TimberModule implements IModule {
         if (lbconsumer != null) {
             lbconsumer.queueBlockBreak(player.getName(), b.getState());
         }
-        if(serverhasmcmmo == true){//XP Awards based on mcMMO default
+        if(serverHasMcmmo == true){//XP Awards based on mcMMO default
             if(b.getTypeId() == 17){
-                if(b.getData() == 0 || b.getData() == 4 || b.getData() == 8 || b.getData() == 12){
-                    com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 70);//Oak
-                }else{
-                    if(b.getData() == 1 || b.getData() == 5 || b.getData() == 9 || b.getData() == 13){
-                    com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 80);//Spruce
-                    }else{
-                        if(b.getData() == 2 || b.getData() == 6 || b.getData() == 10 || b.getData() == 14){
-                        com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 90);//Birch
-                        }else{
-                            if(b.getData() == 3 || b.getData() == 7 || b.getData() == 11 || b.getData() == 16){
-                            com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 100);//Jungle
-                            }
-                        }
-                    }
+                if(b.getData() == 0 || b.getData() == 4 || b.getData() == 8 || b.getData() == 12){//Oak
+                ExperienceAPI.addXP(player, "Woodcutting", 70);
+                }else if(b.getData() == 1 || b.getData() == 5 || b.getData() == 9 || b.getData() == 13){//Spruce
+                ExperienceAPI.addXP(player, "Woodcutting", 80);
+                }else if(b.getData() == 2 || b.getData() == 6 || b.getData() == 10 || b.getData() == 14){//Birch
+                ExperienceAPI.addXP(player, "Woodcutting", 90);
+                }else if(b.getData() == 3 || b.getData() == 7 || b.getData() == 11 || b.getData() == 16){//Jungle
+                ExperienceAPI.addXP(player, "Woodcutting", 100);
                 }
-            }else{
-                if(b.getTypeId() == 162){
-                com.gmail.nossr50.api.ExperienceAPI.addXP(player, "Woodcutting", 70);//Dark Oak and Acacia
-                }
+            }
+            else if(b.getTypeId() == 162){//Dark Oak and Acacia
+            ExperienceAPI.addXP(player, "Woodcutting", 70);
             }
         }
         b.breakNaturally(player.getItemInHand());
