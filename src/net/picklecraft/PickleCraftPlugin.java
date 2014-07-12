@@ -57,7 +57,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
 
     private static boolean worldedit;
     
-	private int spamblock;
+    private int spamblock;
     
     private final Random random = new Random();
     /*
@@ -173,7 +173,7 @@ public class PickleCraftPlugin extends JavaPlugin implements Listener {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        if(cmd.getName().equalsIgnoreCase("pray")){
+        if(command.getName().equalsIgnoreCase("pray")){
 			if(sender instanceof Player){
 				sender.sendMessage(ChatColor.DARK_GREEN + "PickleLord" + ChatColor.GREEN + " has recieved your prayer.");
 				if(spamblock <= 10){
