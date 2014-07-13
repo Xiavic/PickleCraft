@@ -111,20 +111,24 @@ public class TimberModule implements IModule {
         if (lbconsumer != null) {
             lbconsumer.queueBlockBreak(player.getName(), b.getState());
         }
-        if(serverHasMcmmo == true){//XP Awards based on mcMMO default
-            if(b.getTypeId() == 17){
-                if(b.getData() == 0 || b.getData() == 4 || b.getData() == 8 || b.getData() == 12){//Oak
-                ExperienceAPI.addXP(player, "Woodcutting", 70);
-                }else if(b.getData() == 1 || b.getData() == 5 || b.getData() == 9 || b.getData() == 13){//Spruce
-                ExperienceAPI.addXP(player, "Woodcutting", 80);
-                }else if(b.getData() == 2 || b.getData() == 6 || b.getData() == 10 || b.getData() == 14){//Birch
-                ExperienceAPI.addXP(player, "Woodcutting", 90);
-                }else if(b.getData() == 3 || b.getData() == 7 || b.getData() == 11 || b.getData() == 16){//Jungle
-                ExperienceAPI.addXP(player, "Woodcutting", 100);
+        if(serverHasMcmmo) {//XP Awards based on mcMMO default
+            if(b.getType() == Material.LOG){
+                int log = b.getData() % 4;
+                if(log == 1){//Oak
+                    ExperienceAPI.addXP(player, "Woodcutting", 70);
+                }
+                else if(log == 2){//Spruce
+                    ExperienceAPI.addXP(player, "Woodcutting", 80);
+                }
+                else if(log == 3){//Birch
+                    ExperienceAPI.addXP(player, "Woodcutting", 90);
+                }
+                else if(log == 4){//Jungle
+                    ExperienceAPI.addXP(player, "Woodcutting", 100);
                 }
             }
-            else if(b.getTypeId() == 162){//Dark Oak and Acacia
-            ExperienceAPI.addXP(player, "Woodcutting", 70);
+            else if(b.getType() == Material.LOG_2){//Dark Oak and Acacia
+                ExperienceAPI.addXP(player, "Woodcutting", 70);
             }
         }
         b.breakNaturally(player.getItemInHand());
